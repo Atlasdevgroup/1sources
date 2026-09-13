@@ -1,0 +1,142 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/distribution-services",
+      "destination": "/services/distribution-services/",
+      "permanent": true
+    },
+    {
+      "source": "/distribution-services/",
+      "destination": "/services/distribution-services/",
+      "permanent": true
+    },
+    {
+      "source": "/product-sourcing",
+      "destination": "/services/product-sourcing/",
+      "permanent": true
+    },
+    {
+      "source": "/product-sourcing/",
+      "destination": "/services/product-sourcing/",
+      "permanent": true
+    },
+    {
+      "source": "/brand-finder",
+      "destination": "/services/brand-finder/",
+      "permanent": true
+    },
+    {
+      "source": "/brand-finder/",
+      "destination": "/services/brand-finder/",
+      "permanent": true
+    },
+    {
+      "source": "/inventory-management",
+      "destination": "/services/inventory-management/",
+      "permanent": true
+    },
+    {
+      "source": "/inventory-management/",
+      "destination": "/services/inventory-management/",
+      "permanent": true
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/home/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/about-us/",
+      "permanent": true
+    },
+    {
+      "source": "/about/",
+      "destination": "/about-us/",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact-us/",
+      "permanent": true
+    },
+    {
+      "source": "/contact/",
+      "destination": "/contact-us/",
+      "permanent": true
+    },
+    {
+      "source": "/category/uncategorized",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/category/uncategorized/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms-conditions/",
+      "permanent": true
+    },
+    {
+      "source": "/terms/",
+      "destination": "/terms-conditions/",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="570" height="125" viewBox="0 0 570 125">
+<defs>
+  <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#3EB5FF"/>
+    <stop offset="55%" stop-color="#147CF3"/>
+    <stop offset="100%" stop-color="#0059D6"/>
+  </linearGradient>
+  <linearGradient id="g2" x1="0" y1="0" x2="0.9" y2="1">
+    <stop offset="0%" stop-color="#147CF3"/>
+    <stop offset="100%" stop-color="#0B1F3B"/>
+  </linearGradient>
+</defs>
+
+<polygon points="57.52,16.08 90.96,10.00 90.96,35.84 51.44,48.00 34.72,60.16 21.04,63.20 29.40,41.92" fill="url(#g1)"/>
+<polygon points="66.64,38.88 90.96,31.28 90.96,114.88 71.20,124.00 71.20,67.76 46.12,76.12 30.16,88.28 18.00,89.80 25.60,69.28" fill="url(#g1)"/>
+<polygon points="29.40,69.28 71.20,54.84 71.20,73.08 34.72,86.00 18.00,89.80 18.00,76.88" fill="url(#g2)"/><text x="115" y="92" fill="#FFFFFF" font-family="Inter,Arial,sans-serif" font-size="62" font-weight="700" letter-spacing="-3" text-anchor="start">1Sources</text>
+</svg>

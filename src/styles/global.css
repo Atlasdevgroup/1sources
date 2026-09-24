@@ -162,7 +162,7 @@ table { border-collapse: collapse; }
 .btn--outline-dark { --btn-bg: transparent; --btn-fg: var(--paper); --btn-border: #6f7779; }
 .btn--outline-dark:hover { --btn-bg: transparent; --btn-fg: var(--white); --btn-border: var(--paper); }
 .btn--compact { min-height: 40px; padding: 0 16px; font-size: var(--fs-body-sm); }
-.btn--block { width: 100%; }
+.btn--block { width: 100%; white-space: normal; text-align: center; line-height: 1.25; padding-block: 12px; }
 
 .tlink {
   display: inline-flex;
@@ -222,7 +222,8 @@ table { border-collapse: collapse; }
   font-size: 1.0625rem;
 }
 .prose blockquote p + p { margin-top: 0.6em; }
-.prose table { width: 100%; font-size: var(--fs-body-sm); margin-block: 1.8em; display: block; overflow-x: auto; }
+.prose .table-wrap { margin-block: 1.8em; overflow-x: auto; }
+.prose table { width: 100%; min-width: 34rem; font-size: var(--fs-body-sm); }
 .prose th { text-align: left; font-size: var(--fs-label); font-weight: 600; padding: 10px 14px 10px 0; border-bottom: 2px solid var(--ink); vertical-align: bottom; }
 .prose td { padding: 12px 14px 12px 0; border-bottom: var(--rule); vertical-align: top; }
 .prose hr { border: 0; border-top: var(--rule); margin-block: 2.4em; }

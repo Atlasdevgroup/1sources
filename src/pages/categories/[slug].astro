@@ -49,7 +49,7 @@ const lower = d.title.toLowerCase();
     <div class="aside-card" slot="aside">
       <p class="eyebrow">Buying {lower}?</p>
       <p class="aside-card__text">Approved accounts receive {lower} offers from their account contact, with case pack, condition and dating stated.</p>
-      <a class="btn btn--block" href={`/open-account/?category=${entry.id}`} data-event="open_account_click" data-event-location="category_aside" data-event-category={entry.id}>Request {d.title} pricing <Arrow /></a>
+      <a class="btn btn--block" href={`/open-account/?category=${entry.id}`} data-event="open_account_click" data-event-location="category_aside" data-event-category={entry.id}>Request pricing <Arrow /></a>
       <p class="aside-card__alt t-small">Or call <a href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location="category_aside">{site.phone.display}</a></p>
       {d.leadTime && <p class="aside-card__meta t-small"><strong>Typical lead time:</strong> {d.leadTime}</p>}
     </div>

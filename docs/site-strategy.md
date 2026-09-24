@@ -219,7 +219,7 @@ Body copy lives in Markdown, so the template enforces the page structure while t
 
 - It produces static HTML by default, with **zero client JavaScript** unless a component opts in. That's ideal for Core Web Vitals and matches the current hosting (Vercel static). The migration doesn't need a server.
 - **Content collections** (Markdown/YAML with a typed schema) give non-developers structured files for categories, brands, FAQs and articles.
-- A git-based CMS (**Decap / Sveltia CMS** at `/admin`) can sit on top later with no server, so ordinary content edits don't need code changes. Setup is documented in `README.md`.
+- A git-based CMS (**Sveltia CMS**, Decap-compatible, at `/admin/`) sits on top with no server, so ordinary content edits don't need code changes. It's configured in `public/admin/config.yml`, and setup is documented in `README.md`.
 - A shared layout and components remove the duplicated header, footer and schema across the 12 HTML files that exist now.
 - The sitemap is built by `@astrojs/sitemap`. Fonts are self-hosted through Fontsource, with no Google Fonts request.
 

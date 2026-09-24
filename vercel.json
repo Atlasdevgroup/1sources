@@ -1,46 +1,78 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "trailingSlash": true,
-  "cleanUrls": false,
   "redirects": [
     {
-      "source": "/distribution-services",
-      "destination": "/services/distribution-services/",
+      "source": "/services",
+      "destination": "/capabilities/",
       "permanent": true
     },
     {
-      "source": "/distribution-services/",
-      "destination": "/services/distribution-services/",
+      "source": "/services/",
+      "destination": "/capabilities/",
       "permanent": true
     },
     {
-      "source": "/product-sourcing",
-      "destination": "/services/product-sourcing/",
+      "source": "/services/product-sourcing",
+      "destination": "/capabilities/",
       "permanent": true
     },
     {
-      "source": "/product-sourcing/",
-      "destination": "/services/product-sourcing/",
+      "source": "/services/product-sourcing/",
+      "destination": "/capabilities/",
       "permanent": true
     },
     {
-      "source": "/brand-finder",
-      "destination": "/services/brand-finder/",
+      "source": "/services/distribution-services",
+      "destination": "/capabilities/",
       "permanent": true
     },
     {
-      "source": "/brand-finder/",
-      "destination": "/services/brand-finder/",
+      "source": "/services/distribution-services/",
+      "destination": "/capabilities/",
       "permanent": true
     },
     {
-      "source": "/inventory-management",
-      "destination": "/services/inventory-management/",
+      "source": "/services/inventory-management",
+      "destination": "/capabilities/",
       "permanent": true
     },
     {
-      "source": "/inventory-management/",
-      "destination": "/services/inventory-management/",
+      "source": "/services/inventory-management/",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/services/brand-finder",
+      "destination": "/brands/",
+      "permanent": true
+    },
+    {
+      "source": "/services/brand-finder/",
+      "destination": "/brands/",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/unlock-the-potential-of-your-wholesale-business-with-1sources",
+      "destination": "/insights/how-to-choose-a-wholesale-distributor/",
+      "permanent": true
+    },
+    {
+      "source": "/unlock-the-potential-of-your-wholesale-business-with-1sources/",
+      "destination": "/insights/how-to-choose-a-wholesale-distributor/",
       "permanent": true
     },
     {
@@ -74,16 +106,6 @@
       "permanent": true
     },
     {
-      "source": "/category/uncategorized",
-      "destination": "/blog/",
-      "permanent": true
-    },
-    {
-      "source": "/category/uncategorized/",
-      "destination": "/blog/",
-      "permanent": true
-    },
-    {
       "source": "/terms",
       "destination": "/terms-conditions/",
       "permanent": true
@@ -92,11 +114,191 @@
       "source": "/terms/",
       "destination": "/terms-conditions/",
       "permanent": true
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy-policy/",
+      "permanent": true
+    },
+    {
+      "source": "/privacy/",
+      "destination": "/privacy-policy/",
+      "permanent": true
+    },
+    {
+      "source": "/distribution-services",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/distribution-services/",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/product-sourcing",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/product-sourcing/",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/inventory-management",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/inventory-management/",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/brand-finder",
+      "destination": "/brands/",
+      "permanent": true
+    },
+    {
+      "source": "/brand-finder/",
+      "destination": "/brands/",
+      "permanent": true
+    },
+    {
+      "source": "/feed",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/feed/",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/comments/feed",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/comments/feed/",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/apply",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/apply/",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/account",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/account/",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/new-account",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/new-account/",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/wholesale-account",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/wholesale-account/",
+      "destination": "/open-account/",
+      "permanent": true
+    },
+    {
+      "source": "/brands-we-carry",
+      "destination": "/brands/",
+      "permanent": true
+    },
+    {
+      "source": "/brands-we-carry/",
+      "destination": "/brands/",
+      "permanent": true
+    },
+    {
+      "source": "/manufacturers",
+      "destination": "/brand-partners/",
+      "permanent": true
+    },
+    {
+      "source": "/manufacturers/",
+      "destination": "/brand-partners/",
+      "permanent": true
+    },
+    {
+      "source": "/for-brands",
+      "destination": "/brand-partners/",
+      "permanent": true
+    },
+    {
+      "source": "/for-brands/",
+      "destination": "/brand-partners/",
+      "permanent": true
+    },
+    {
+      "source": "/for-retailers",
+      "destination": "/retailers/",
+      "permanent": true
+    },
+    {
+      "source": "/for-retailers/",
+      "destination": "/retailers/",
+      "permanent": true
+    },
+    {
+      "source": "/buyers",
+      "destination": "/retailers/",
+      "permanent": true
+    },
+    {
+      "source": "/buyers/",
+      "destination": "/retailers/",
+      "permanent": true
+    },
+    {
+      "source": "/services/:path*",
+      "destination": "/capabilities/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/category/:path*",
+      "destination": "/insights/",
+      "permanent": true
+    },
+    {
+      "source": "/author/:path*",
+      "destination": "/insights/",
+      "permanent": true
     }
   ],
   "headers": [
     {
-      "source": "/assets/(.*)",
+      "source": "/_astro/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -105,11 +307,11 @@
       ]
     },
     {
-      "source": "/favicon.ico",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=604800"
+          "value": "public, max-age=2592000"
         }
       ]
     },

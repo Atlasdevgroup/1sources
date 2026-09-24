@@ -1,7 +1,7 @@
 ---
 import Arrow from '@/components/ui/Arrow.astro';
 ---
-<section class="section audience" aria-label="Who we work with">
+<section class="section section--flush-top audience" aria-label="Who we work with">
   <div class="container grid audience__grid">
     <article class="panel panel--buyers band--ink cut-br" aria-labelledby="aud-buyers">
       <p class="eyebrow">For retailers &amp; buyers</p>
@@ -44,7 +44,7 @@ import Arrow from '@/components/ui/Arrow.astro';
 </section>
 
 <style>
-  .audience__grid { row-gap: var(--gutter); align-items: stretch; }
+  .audience__grid { row-gap: var(--gutter); align-items: start; }
   .panel { grid-column: 1 / -1; padding: clamp(28px, 4vw, 56px); display: flex; flex-direction: column; gap: 20px; }
   .panel h2 { max-width: 16ch; }
   .panel__lead { color: var(--text-secondary); max-width: 36rem; }

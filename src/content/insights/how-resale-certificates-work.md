@@ -82,7 +82,7 @@ The Multistate Tax Commission publishes the Uniform Sales & Use Tax Resale Certi
 
 ### How the options compare
 
-| | State-specific form (e.g. NJ ST-3) | Streamlined Certificate of Exemption | MTC Uniform Resale Certificate |
+| Certificate | State-specific form (e.g. NJ ST-3) | Streamlined Certificate of Exemption | MTC Uniform Resale Certificate |
 |---|---|---|---|
 | **Issued by** | One state's tax agency | Streamlined Sales Tax Governing Board | Multistate Tax Commission |
 | **Where it's accepted** | That state | Streamlined member states | States that have indicated acceptance, some with conditions |

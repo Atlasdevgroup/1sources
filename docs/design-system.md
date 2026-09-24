@@ -123,7 +123,7 @@ Spacing uses a 4px base scale: `--space-1` 4 · `2` 8 · `3` 12 · `4` 16 · `5`
 
 ## 9. Navigation
 
-- **Desktop header** (≥ 1100px) has a 72px row: logo · nav · Open an Account button. It sits under a 36px utility bar with the address, phone and email. The header becomes sticky on scroll-up only.
+- **Desktop header** (≥ 1100px) has a 72px row: logo · nav · Open an Account button. It sits under a 36px utility bar with the address, phone and email. The header row stays sticky; the utility bar scrolls away.
 - **Categories mega-menu:** a two-column ledger of the 10 categories, with a short descriptor for each. A side panel holds "All categories", "Brands we carry" and a one-line account prompt. It opens on click or keyboard (a disclosure button, not hover-only), with a 160ms fade. Esc closes it.
 - **Mobile** (< 1100px): logo · "Open account" compact button · Menu button. The menu is a full-height sheet with large type. Categories are in an expandable disclosure. The sheet ends with the contact block (phone, email, WhatsApp if configured) and the account CTA.
 

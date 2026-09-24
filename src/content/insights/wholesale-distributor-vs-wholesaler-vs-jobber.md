@@ -45,7 +45,7 @@ The practical takeaway: the most important line isn't between distributor, whole
 
 The table below reflects how the terms are commonly used in consumer goods. Individual businesses vary, so use it as a starting point for your questions.
 
-| | Wholesale distributor | Wholesaler (general) | Jobber | Broker / agent |
+| Term | Wholesale distributor | Wholesaler (general) | Jobber | Broker / agent |
 |---|---|---|---|---|
 | **Owns the goods it sells** | Yes | Yes | Yes | No |
 | **Typical sources** | Brands, authorized distributors, other established channels | Varies widely | Manufacturers and larger distributors | Represents a seller or buyer |

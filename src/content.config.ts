@@ -54,7 +54,7 @@ const insights = defineCollection({
     featured: z.boolean().default(false),
     relatedCategories: z.array(reference('categories')).default([]),
     cta: z.enum(['account', 'brand', 'contact']).default('account'),
-    sources: z.array(z.object({ title: z.string(), url: z.string().url() })).default([]),
+    sources: z.array(z.object({ title: z.string(), url: z.url() })).default([]),
     draft: z.boolean().default(false),
   }),
 });

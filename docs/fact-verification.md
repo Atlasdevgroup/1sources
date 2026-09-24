@@ -102,3 +102,25 @@ Every category is in `src/content/categories/` with a `confirmed` flag. When `co
 |---|---|---|
 | `racking-*`, `facility-aisle-*`, `operations-*`, `staff-aisle-*`, `consult-*`, `account-review-*`, `planning-*`, `team-portrait-*` | REMOVE the captions; limit use | These are stock photos. The new site uses only two people-free warehouse images, as *atmosphere*, with neutral alt text ("Pallet racking in a distribution warehouse"). They're never captioned as 1Sources facilities. Replace them with authentic photography (see `content-required.md`). |
 | Brand logos in `assets/img/brands-opt/` | REMOVE from use | Kept in the repo history only. |
+
+## Claims the new site's copy relies on (confirm before launch)
+
+The new copy describes how the relationship works in modest, operational terms. Each statement below is standard for a distributor, but it's still a claim about 1Sources, so the client must confirm it. If a statement isn't true, edit the file listed and record the change here.
+
+| Statement (paraphrased) | Where it appears | Status |
+|---|---|---|
+| Accounts are for businesses that resell; 1Sources doesn't sell to consumers | Home, About, Capabilities, FAQ, Open Account, `llms.txt` | CLIENT CONFIRMATION REQUIRED |
+| Each account works with a named account contact | Home ("Why 1Sources"), Retailers, About, Capabilities | CLIENT CONFIRMATION REQUIRED |
+| Offers and quotes state case pack, condition and dating on short-coded lots | Home, categories, Capabilities, About | CLIENT CONFIRMATION REQUIRED |
+| One purchase order can combine brands and categories | Home, About, Capabilities, categories | CLIENT CONFIRMATION REQUIRED (priority) |
+| Orders are picked, packed and shipped to stores, warehouses, 3PLs or marketplace prep centers | Home process, Capabilities, Retailers | CLIENT CONFIRMATION REQUIRED |
+| Parcel for small orders, palletized freight for larger ones; tracking or BOL shared | Capabilities | CLIENT CONFIRMATION REQUIRED |
+| 1Sources doesn't dropship single units to end customers | Capabilities ("What we don't do") | CLIENT CONFIRMATION REQUIRED |
+| Inventory comes from brands, their distributors and legitimate inventory opportunities | Home, About, Capabilities, category FAQs | CLIENT CONFIRMATION REQUIRED |
+| Brands can discuss excess, discontinued and packaging-change inventory | Home, Brand Partners, Capabilities | CLIENT CONFIRMATION REQUIRED |
+| Brand pricing and channel policies are respected | Home, Brand Partners, Capabilities | CLIENT CONFIRMATION REQUIRED |
+| Reply within "one business day" | Forms, Contact, success page (`company.json → responseTime`) | CLIENT CONFIRMATION REQUIRED |
+| No documents or tax IDs are requested on the application form | Open Account, Privacy | VERIFIED (how the form is built) |
+| Location context: near the Port of New York and New Jersey | About | VERIFIED (geography) |
+
+Article content (`src/content/insights/`) is general industry guidance with cited sources. It makes no claims about 1Sources beyond the entity statement.

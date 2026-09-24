@@ -2,8 +2,8 @@
 
 This is the information the site needs before launch, or to reach its full potential. Items marked **Launch-blocking** should be answered before DNS cut-over. Everything else improves ranking, trust or conversion, and can follow.
 
-Where each answer goes:
-- **Company, contact, social, trust:** `src/config/site.ts`
+Where each answer goes (all of these are editable in the browser at `/admin/`, see `README.md`):
+- **Company, contact, social, trust:** `src/data/company.json`
 - **Categories:** `src/content/categories/*.md`
 - **Brands:** `src/content/brands/brands.yaml`
 - **FAQs:** `src/content/faqs/*.yaml`

@@ -1,0 +1,26 @@
+---
+/**
+ * The 1Sources mark: the original slanted-plane "1" geometry, redrawn flat in
+ * ink + teal (the gradient royal-blue version is retired — pending client sign-off).
+ */
+interface Props { tone?: 'ink' | 'paper'; showWordmark?: boolean; class?: string; }
+const { tone = 'ink', showWordmark = true, class: cls } = Astro.props;
+---
+<span class:list={['logo', `logo--${tone}`, cls]}>
+  <svg class="logo__mark" viewBox="16 8 100 154" width="22" height="34" aria-hidden="true" focusable="false">
+    <polygon class="p1" points="70,18 114,10 114,44 62,60 40,76 22,80 33,52" />
+    <polygon class="p1" points="82,48 114,38 114,148 88,160 88,86 55,97 34,113 18,115 28,88" />
+    <polygon class="p2" points="33,88 88,69 88,93 40,110 18,115 18,98" />
+  </svg>
+  {showWordmark && <span class="logo__word">1Sources</span>}
+</span>
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 10px; line-height: 1; }
+  .logo__mark { width: auto; height: 32px; flex: none; }
+  .logo--ink .p1 { fill: var(--ink); }
+  .logo--ink .p2 { fill: var(--teal); }
+  .logo--paper .p1 { fill: var(--paper); }
+  .logo--paper .p2 { fill: var(--teal-light); }
+  .logo__word { font-size: 1.4375rem; font-weight: 700; letter-spacing: -0.035em; }
+  .logo--paper .logo__word { color: var(--paper); }
+</style>

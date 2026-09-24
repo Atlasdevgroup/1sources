@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import BrandIndex from '@/components/ui/BrandIndex.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+
+const categories = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
+const categoryNames = Object.fromEntries(categories.map((c) => [c.id, c.data.title]));
+// Only brands the client has approved for public display (docs/fact-verification.md).
+const brands = (await getCollection('brands', (b) => b.data.publicDisplay)).sort((a, b) => a.data.name.localeCompare(b.data.name));
+const groups = categories
+  .map((c) => ({ category: c, brands: brands.filter((b) => b.data.categories.some((r) => r.id === c.id)) }))
+  .filter((g) => g.brands.length > 0);
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Brands', path: '/brands/' }];
+---
+<Base
+  title="Brands We Carry — Name-Brand Wholesale Consumer Goods"
+  description="Name brands 1Sources supplies by the case to retailers and resellers across health & beauty, household, grocery, toys and more. Ask about brands not listed."
+  path="/brands/"
+  pageType="CollectionPage"
+  breadcrumbs={crumbs}
+  viewEvent={{ name: 'brand_view', params: { list: 'all' } }}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="Brands"
+    title="Brands we carry"
+    lead="A selection of the name brands 1Sources supplies to business accounts. Availability changes with each offer, and many more brands come through than we list here — if you’re looking for something specific, ask."
+  >
+    <div class="btn-row" slot="aside">
+      <a class="btn" href="/open-account/" data-event="open_account_click" data-event-location="brands_intro">Open an Account <Arrow /></a>
+      <a class="tlink" href="/contact-us/?topic=buying">Ask about a brand</a>
+    </div>
+  </PageIntro>
+
+  <section class="section section--flush-top">
+    <div class="container">
+      {brands.length === 0 ? (
+        <p class="t-lead">Our brand list is shared with approved accounts. <a href="/open-account/">Apply for an account</a> or <a href="/contact-us/">ask us about a specific brand</a>.</p>
+      ) : (
+        <>
+          <h2 class="visually-hidden">All brands, A–Z</h2>
+          <BrandIndex brands={brands} categoryNames={categoryNames} />
+          <div class="bygroup">
+            <h2 class="bygroup__t">By category</h2>
+            <dl class="bygroup__list">
+              {groups.map((g) => (
+                <div>
+                  <dt><a href={`/categories/${g.category.id}/`}>{g.category.data.title}</a></dt>
+                  <dd>{g.brands.map((b) => b.data.name).join(', ')}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </>
+      )}
+      <p class="disclaimer t-small">
+        Brand names are trademarks of their respective owners. A listing shows products 1Sources has supplied; it is not
+        a claim of authorization by, or endorsement from, the brand owner unless stated. Brand owners with questions can
+        <a href="/contact-us/?topic=brand">contact us</a>.
+      </p>
+    </div>
+  </section>
+
+  <CTABand
+    location="brands"
+    title="Looking for a brand you don’t see?"
+    body="Tell us which brands and items you buy. If we can supply them, your account contact will include them in your offers."
+  />
+</Base>
+
+<style>
+  .bygroup { margin-top: var(--section-tight); display: grid; gap: 20px; }
+  .bygroup__t { font-size: var(--fs-h3); }
+  .bygroup__list { border-top: var(--rule-strong); }
+  .bygroup__list div { display: grid; gap: 4px; padding: 14px 0; border-bottom: var(--rule); }
+  .bygroup__list dt a { font-weight: 600; text-decoration: none; }
+  .bygroup__list dt a:hover { color: var(--accent); }
+  .bygroup__list dd { color: var(--text-secondary); }
+  @media (min-width: 768px) { .bygroup__list div { grid-template-columns: 16rem 1fr; } }
+  .disclaimer { margin-top: 40px; color: var(--text-muted); max-width: 60ch; }
+  .disclaimer a { color: var(--text-secondary); }
+</style>

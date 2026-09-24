@@ -1,0 +1,64 @@
+---
+/**
+ * Source → Purchase → Fulfill → Reorder, drawn as a route with stations
+ * rather than four cards. Horizontal on desktop, vertical on small screens.
+ */
+const steps = [
+  {
+    key: 'Source',
+    title: 'We find the inventory',
+    body: 'From brands, their distributors and legitimate inventory opportunities: current lines, packaging changes, overstock and seasonal surplus.',
+  },
+  {
+    key: 'Purchase',
+    title: 'You decide on real facts',
+    body: 'Your account contact sends offers with case pack, condition and dating. Buy the lines that fit, across brands, on one purchase order.',
+  },
+  {
+    key: 'Fulfill',
+    title: 'Orders ship to you',
+    body: 'Orders are picked, packed and shipped to your store, warehouse or prep center, with the paperwork your receiving team needs.',
+  },
+  {
+    key: 'Reorder',
+    title: 'What sells, comes back',
+    body: 'Tell us your core lines and we watch for them. Replenishment gets easier with every order, because we know what you buy.',
+  },
+];
+---
+<ol class="route" role="list">
+  {steps.map((s, i) => (
+    <li class="route__stop">
+      <span class="route__node" aria-hidden="true"></span>
+      <p class="route__key eyebrow"><span class="num">{String(i + 1).padStart(2, '0')}</span> {s.key}</p>
+      <h3 class="route__title">{s.title}</h3>
+      <p class="route__body">{s.body}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .route { position: relative; display: grid; gap: 0; }
+  .route__stop { position: relative; padding: 0 0 36px 36px; }
+  .route__stop::before {
+    content: '';
+    position: absolute;
+    left: 5px; top: 12px; bottom: -12px;
+    width: 2px;
+    background: var(--ink);
+  }
+  .route__stop:last-child::before { background: repeating-linear-gradient(var(--ink) 0 6px, transparent 6px 12px); bottom: 0; }
+  .route__node { position: absolute; left: 0; top: 4px; width: 12px; height: 12px; background: var(--accent); }
+  .route__key { color: var(--text-primary); margin-bottom: 10px; }
+  .route__key .num { color: var(--accent); margin-right: 6px; }
+  .route__title { font-size: var(--fs-h4); margin-bottom: 8px; }
+  .route__body { color: var(--text-secondary); font-size: var(--fs-body-sm); max-width: 34ch; }
+
+  @media (min-width: 900px) {
+    .route { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gutter); }
+    .route__stop { padding: 36px 8px 0 0; }
+    .route__stop::before { left: 0; right: calc(var(--gutter) * -1); top: 5px; bottom: auto; width: auto; height: 2px; }
+    .route__stop:last-child::before { right: 0; background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 12px); }
+    .route__node { top: 0; }
+  }
+</style>

@@ -1,0 +1,116 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import MarginSection from '@/components/ui/MarginSection.astro';
+import FAQList from '@/components/ui/FAQList.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'For Brands', path: '/brand-partners/' }];
+const faqs = (await getCollection('faqs', (f) => f.data.group === 'Brands & manufacturers'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((f) => ({ q: f.data.q, a: f.data.a }));
+
+const offers = [
+  { t: 'Reach professional resellers', b: 'Independent and regional retailers, pharmacies, grocers, beauty and discount stores, ecommerce sellers and other wholesalers — businesses that buy by the case and resell.' },
+  { t: 'Channel discipline', b: 'Tell us your pricing, marketplace and territory policies. They become part of how we place your product, and we’ll tell you plainly where it goes.' },
+  { t: 'Category knowledge', b: 'Our account contacts buy and sell the categories you make, and understand the dating, labeling and freight realities that come with them.' },
+  { t: 'Inventory that needs to move', b: 'Excess stock, discontinued items, packaging changes and seasonal overruns. We can talk about placing them without disrupting your core channels.' },
+];
+
+const conversation = [
+  'Your brand, categories and current distribution',
+  'Where you want to grow — regions, retail formats, ecommerce',
+  'Pricing and channel policies we should know',
+  'Any inventory you need to place, with quantities and dating',
+];
+---
+<Base
+  title="For Brands & Manufacturers — Distribution Partner"
+  description="Brands and manufacturers work with 1Sources to reach professional retail and ecommerce resellers, respect channel policies, and place excess or discontinued inventory."
+  path="/brand-partners/"
+  breadcrumbs={crumbs}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="For brands & manufacturers"
+    title="Distribution that respects your channel"
+    lead="1Sources places name-brand consumer goods with vetted, professional resellers across retail and ecommerce. If you’re looking for new reach, a distribution partner for a region or format, or a responsible home for inventory, start with a conversation."
+    tone="ink"
+  >
+    <div class="btn-row" slot="aside">
+      <a class="btn btn--on-dark" href="/contact-us/?topic=brand" data-event="contact_click" data-event-location="brands_intro">Discuss Distribution <Arrow /></a>
+    </div>
+  </PageIntro>
+
+  <section class="section" aria-labelledby="offer-title">
+    <div class="container">
+      <MarginSection num="01" label="What we offer brands">
+        <h2 id="offer-title" class="b-h2">Why brands work with a distributor like us</h2>
+        <ol class="offers" role="list">
+          {offers.map((o, i) => (
+            <li>
+              <span class="num offers__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="offers__t">{o.t}</h3>
+              <p class="offers__b">{o.b}</p>
+            </li>
+          ))}
+        </ol>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section band--paper" aria-labelledby="conv-title">
+    <div class="container">
+      <MarginSection num="02" label="Starting out">
+        <div class="conv">
+          <div>
+            <h2 id="conv-title" class="b-h2">What a first conversation covers</h2>
+            <p class="t-secondary">No commitment, and no pitch deck required. Send a short note or call, and we’ll set up a call with the right person.</p>
+          </div>
+          <ul class="conv__list" role="list">
+            {conversation.map((c) => <li>{c}</li>)}
+          </ul>
+        </div>
+      </MarginSection>
+    </div>
+  </section>
+
+  {faqs.length > 0 && (
+    <section class="section" aria-labelledby="bfaq-title">
+      <div class="container">
+        <MarginSection num="03" label="Questions">
+          <h2 id="bfaq-title" class="b-h2">Questions brands ask</h2>
+          <FAQList items={faqs} />
+        </MarginSection>
+      </div>
+    </section>
+  )}
+
+  <CTABand
+    location="brand_partners"
+    title="Talk to us about distribution."
+    body="Tell us about your brand and what you’re trying to achieve. We’ll tell you honestly whether we’re a good fit."
+    primary={{ label: 'Discuss Distribution', href: '/contact-us/?topic=brand', event: 'contact_click' }}
+    secondary={{ label: 'Read how we work', href: '/capabilities/#brand-distribution', event: 'contact_click' }}
+  />
+</Base>
+
+<style>
+  .b-h2 { font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem); margin-bottom: 28px; max-width: 24ch; }
+  .offers { border-top: var(--rule-strong); }
+  .offers li { display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; row-gap: 6px; padding: 22px 0 24px; border-bottom: var(--rule); }
+  .offers__n { grid-row: span 2; color: var(--accent); font-weight: 600; font-size: var(--fs-label); padding-top: 4px; }
+  .offers__t { font-size: var(--fs-h4); }
+  .offers__b { color: var(--text-secondary); max-width: 40rem; }
+  @media (min-width: 768px) {
+    .offers li { grid-template-columns: 40px minmax(0, 4fr) minmax(0, 6fr); align-items: baseline; }
+    .offers__n { grid-row: auto; }
+  }
+  .conv { display: grid; gap: 32px; }
+  .conv__list { border-top: var(--rule-strong); }
+  .conv__list li { padding: 12px 0 12px 22px; border-bottom: 1px solid #d8d3c8; position: relative; }
+  .conv__list li::before { content: ''; position: absolute; left: 0; top: 23px; width: 10px; height: 2px; background: var(--accent); }
+  @media (min-width: 900px) { .conv { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gutter) * 2); } }
+</style>

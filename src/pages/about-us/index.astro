@@ -1,0 +1,201 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import MarginSection from '@/components/ui/MarginSection.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { site, fullAddress } from '@/config/site';
+
+const categories = (await getCollection('categories', (c) => c.data.confirmed)).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'About', path: '/about-us/' }];
+
+/* Company facts — only confirmed values render (docs/fact-verification.md). */
+const facts = [
+  { k: 'Company', v: site.legalName ?? site.name },
+  { k: 'Business', v: 'Wholesale distributor (jobber) of name-brand consumer goods' },
+  { k: 'Headquarters', v: fullAddress },
+  { k: 'Customers', v: 'Retailers, ecommerce and marketplace sellers, and other wholesalers' },
+  { k: 'Sells to consumers', v: 'No — business accounts only' },
+  ...(site.yearEstablished ? [{ k: 'Established', v: String(site.yearEstablished) }] : []),
+  ...(site.serviceArea ? [{ k: 'Service area', v: site.serviceArea }] : []),
+  ...(site.trust.duns ? [{ k: 'D-U-N-S', v: site.trust.duns }] : []),
+  { k: 'Contact', v: `${site.phone.display} · ${site.email}` },
+];
+
+const principles = [
+  {
+    t: 'We sell to businesses that resell',
+    b: 'Every account is a business with a reason to buy by the case: a store, an online seller, a wholesaler. We don’t sell to consumers, and we ask the questions a responsible distributor should before opening an account.',
+  },
+  {
+    t: 'We say what a lot is before you buy it',
+    b: 'Condition, case pack and dating belong on the offer, not in a surprise at receiving. If something is short-dated, a packaging change, or an opportunistic buy, the quote says so.',
+  },
+  {
+    t: 'We don’t overstate brand relationships',
+    b: 'Where product comes from matters to buyers and to brands. We describe our sourcing plainly, and we don’t call ourselves an authorized distributor for a brand unless that brand has confirmed it in writing.',
+  },
+  {
+    t: 'Accounts are relationships',
+    b: 'Buyers deal with a named contact who learns what they stock and how they receive freight. That is the difference between a supplier and a website with a price list.',
+  },
+];
+---
+<Base
+  title="About 1Sources — Wholesale Distributor, Jersey City NJ"
+  description="1Sources is a wholesale distributor in Jersey City, NJ, supplying name-brand consumer goods by the case to retailers, ecommerce sellers and other resellers."
+  path="/about-us/"
+  pageType="AboutPage"
+  breadcrumbs={crumbs}
+>
+  <PageIntro crumbs={crumbs} eyebrow="About 1Sources" title="A wholesale distributor in the middle of the supply chain — on purpose." lead={site.description} />
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <MarginSection num="01" label="Our role">
+        <div class="prose about-prose">
+          <p>
+            Between the brands that make consumer goods and the stores that sell them sits a layer most shoppers never
+            see: distributors, wholesalers and jobbers who buy in volume, break it down by the case, and move it to the
+            businesses that put it on shelves and online listings. 1Sources works in that layer.
+          </p>
+          <p>
+            We buy name-brand health &amp; beauty, household, grocery, toy and electronics products from brands, their
+            distributors and legitimate inventory opportunities, and we resell them to approved business accounts. A
+            retailer that would need a dozen vendor relationships to stock a dozen brands can open one account with us
+            and buy across all of them on a single purchase order.
+          </p>
+          <p>
+            For brands, we are a route to professional resellers across retail and ecommerce, and a practical option
+            when inventory needs to move — after a packaging change, a discontinued line or a seasonal overrun.
+          </p>
+        </div>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section band--paper" aria-labelledby="facts-title">
+    <div class="container">
+      <MarginSection num="02" label="Company facts">
+        <h2 id="facts-title" class="about-h2">1Sources at a glance</h2>
+        <dl class="factlist">
+          {facts.map((f) => (
+            <div><dt>{f.k}</dt><dd>{f.v}</dd></div>
+          ))}
+        </dl>
+        <p class="t-small t-muted facts-note">
+          We publish only facts we can stand behind. For verification requests from marketplaces, brands or financial
+          partners, contact <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="container">
+      <MarginSection num="03" label="How we work" sticky>
+        <h2 id="how-title" class="about-h2">Four things we hold ourselves to</h2>
+        <ol class="principles" role="list">
+          {principles.map((p, i) => (
+            <li>
+              <span class="num principles__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="principles__t">{p.t}</h3>
+              <p class="principles__b">{p.b}</p>
+            </li>
+          ))}
+        </ol>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section section--flush-top" aria-labelledby="serve-title">
+    <div class="container">
+      <MarginSection num="04" label="Who we serve">
+        <div class="serve">
+          <div>
+            <h2 id="serve-title" class="about-h2">Buyers and brands</h2>
+            <p class="t-secondary">
+              Our customers are independent and regional retailers — grocery, pharmacy, beauty, convenience, discount
+              and specialty — ecommerce and marketplace sellers, and other wholesalers. Our suppliers are brands,
+              their distributors and businesses with inventory to place.
+            </p>
+            <div class="btn-row serve__links">
+              <a class="tlink" href="/retailers/">For retailers <Arrow /></a>
+              <a class="tlink" href="/brand-partners/">For brands <Arrow /></a>
+            </div>
+          </div>
+          <nav aria-labelledby="serve-cats">
+            <p class="eyebrow" id="serve-cats">Core categories</p>
+            <ul class="serve__cats" role="list">
+              {categories.map((c) => <li><a href={`/categories/${c.id}/`}>{c.data.title} <Arrow size={14} /></a></li>)}
+            </ul>
+          </nav>
+        </div>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section band--ink" aria-labelledby="where-title">
+    <div class="container grid where">
+      <div class="where__copy">
+        <p class="eyebrow">Where we are</p>
+        <h2 id="where-title">Jersey City, New Jersey</h2>
+        <p>
+          1Sources is based at {site.address.street} in {site.address.city}, across the Hudson from Manhattan and
+          close to the Port of New York and New Jersey and the interstate corridors that serve the Northeast.
+        </p>
+        <address>
+          {site.legalName && <>{site.legalName}<br /></>}
+          {site.address.street}<br />{site.address.city}, {site.address.region} {site.address.postalCode}
+        </address>
+        <a class="btn btn--outline-dark" href={site.address.mapUrl} rel="noopener" target="_blank">Open in Google Maps <Arrow direction="up-right" /></a>
+      </div>
+      <figure class="where__media">
+        <picture>
+          <source type="image/webp" srcset="/assets/img/opt/facility-aisle-480.webp 480w, /assets/img/opt/facility-aisle-800.webp 800w, /assets/img/opt/facility-aisle-1200.webp 1200w" sizes="(min-width: 1024px) 50vw, 100vw" />
+          <img class="img-treated cut-tr" src="/assets/img/opt/facility-aisle-1200.jpg" alt="Wrapped pallets of cased goods in a distribution warehouse aisle" width="1200" height="800" loading="lazy" decoding="async" />
+        </picture>
+      </figure>
+    </div>
+  </section>
+
+  <CTABand location="about" />
+</Base>
+
+<style>
+  .about-h2 { font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem); margin-bottom: 28px; max-width: 24ch; }
+  .about-prose { font-size: var(--fs-body-lg); line-height: 1.6; }
+
+  .factlist { border-top: var(--rule-strong); }
+  .factlist div { display: grid; gap: 4px; padding: 14px 0; border-bottom: 1px solid #d8d3c8; }
+  .factlist dt { font-size: var(--fs-label); font-weight: 600; color: var(--text-muted); letter-spacing: 0.01em; }
+  .factlist dd { font-weight: 500; }
+  @media (min-width: 640px) { .factlist div { grid-template-columns: 12rem 1fr; gap: 16px; align-items: baseline; } }
+  .facts-note { margin-top: 18px; }
+  .facts-note a { color: var(--text-secondary); }
+
+  .principles { border-top: var(--rule-strong); }
+  .principles li { display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; row-gap: 8px; padding: 24px 0 26px; border-bottom: var(--rule); }
+  .principles__n { grid-row: span 2; color: var(--accent); font-weight: 600; font-size: var(--fs-label); padding-top: 5px; }
+  .principles__t { font-size: var(--fs-h4); }
+  .principles__b { color: var(--text-secondary); max-width: 40rem; }
+
+  .serve { display: grid; gap: 40px; }
+  .serve__links { margin-top: 24px; }
+  .serve__cats { margin-top: 12px; border-top: var(--rule-strong); }
+  .serve__cats a { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: var(--rule); text-decoration: none; font-weight: 600; }
+  .serve__cats a:hover { color: var(--accent); }
+  @media (min-width: 900px) { .serve { grid-template-columns: 3fr 2fr; column-gap: calc(var(--gutter) * 2); } }
+
+  .where { row-gap: 40px; align-items: center; }
+  .where__copy { grid-column: 1 / -1; display: grid; gap: 20px; justify-items: start; }
+  .where__copy p { color: var(--text-inverse-muted); max-width: 34rem; }
+  .where__copy address { font-style: normal; font-size: var(--fs-body-lg); line-height: 1.45; }
+  .where__media { grid-column: 1 / -1; }
+  .where__media img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  @media (min-width: 1024px) {
+    .where__copy { grid-column: 1 / span 5; }
+    .where__media { grid-column: 7 / -1; }
+  }
+</style>

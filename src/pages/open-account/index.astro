@@ -1,0 +1,161 @@
+---
+import '@/styles/forms.css';
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import Field from '@/components/forms/Field.astro';
+import CheckboxGroup from '@/components/forms/CheckboxGroup.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { site } from '@/config/site';
+import { businessTypes, salesChannels, monthlyVolumes, resaleStatuses, referralSources } from '@/lib/leads';
+
+const categories = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
+const categoryOptions = categories.map((c) => ({ value: c.id, label: c.data.title }));
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Open an Account', path: '/open-account/' }];
+---
+<Base
+  title="Open a Wholesale Account"
+  description="Apply for a 1Sources wholesale account. For retailers, ecommerce sellers and resellers buying name-brand consumer goods by the case. Takes about five minutes."
+  path="/open-account/"
+  breadcrumbs={crumbs}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="Wholesale account application"
+    title="Open an account"
+    lead="For businesses that resell. Tell us who you are, how you sell and what you buy. It takes about five minutes, and there’s no cost or commitment to apply."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container grid apply">
+      <aside class="apply__aside" aria-labelledby="next-title">
+        <div class="apply__sticky">
+          <h2 class="eyebrow" id="next-title">What happens next</h2>
+          <ol class="next" role="list">
+            <li><strong>We review your application</strong> and may ask a few questions about your business.</li>
+            <li><strong>We confirm your account details</strong>, including resale documentation for tax-exempt purchasing.</li>
+            <li><strong>Your account contact sends offers</strong> matched to the categories and brands you told us about.</li>
+          </ol>
+          <dl class="apply__facts">
+            <div><dt>Who can apply</dt><dd>Registered businesses that resell. We don’t sell to consumers.</dd></div>
+            <div><dt>Reply time</dt><dd>Within {site.responseTime}.</dd></div>
+            {site.accountTerms.approvalTime && <div><dt>Approval</dt><dd>{site.accountTerms.approvalTime}</dd></div>}
+            {site.accountTerms.minimumOrder && <div><dt>Minimum order</dt><dd>{site.accountTerms.minimumOrder}</dd></div>}
+          </dl>
+          <p class="t-small t-muted">We won’t ask for tax IDs or documents on this form — we’ll request what’s needed securely during onboarding.</p>
+          <p class="t-small">Questions first? <a href="/faq/">Read the FAQ</a> or call <a href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location="open_account">{site.phone.display}</a>.</p>
+        </div>
+      </aside>
+
+      <form
+        class="form apply__form"
+        method="post"
+        action={site.forms.endpoint ?? `mailto:${site.email}`}
+        enctype={site.forms.endpoint ? undefined : "text/plain"}
+        data-lead-form
+        data-lead-type="account_application"
+        data-event-prefix="account_form"
+        data-track-view
+        data-endpoint={site.forms.endpoint ?? undefined}
+        data-success-url="/open-account/success/"
+        data-fallback-email={site.email}
+        data-fallback-phone={site.phone.e164}
+        data-fallback-phone-display={site.phone.display}
+        data-response-time={site.responseTime}
+        aria-labelledby="form-title"
+      >
+        <h2 class="visually-hidden" id="form-title">Account application form</h2>
+        <div class="form__summary" data-summary hidden role="alert"></div>
+
+        <fieldset class="form__section">
+          <legend class="form__section-head"><span class="form__section-num">01</span><span class="form__section-title">Your business</span></legend>
+          <div class="form__row">
+            <Field name="company" label="Company name" required autocomplete="organization" width="half" />
+            <Field name="website" label="Website or store link" type="url" autocomplete="url" width="half" hint="Include https://" />
+            <Field name="name" label="Your name" required autocomplete="name" width="half" />
+            <Field name="role" label="Your role" autocomplete="organization-title" width="half" />
+            <Field name="email" label="Business email" type="email" required autocomplete="email" width="half" error="Please enter your business email." />
+            <Field name="phone" label="Phone" type="tel" required autocomplete="tel" width="half" error="Please enter a phone number." />
+            <Field name="street" label="Business address" autocomplete="street-address" required error="Please enter your business address." />
+            <Field name="city" label="City" autocomplete="address-level2" required width="third" />
+            <Field name="region" label="State" autocomplete="address-level1" required width="third" />
+            <Field name="postalCode" label="ZIP code" autocomplete="postal-code" required width="third" inputmode="numeric" error="Please enter your ZIP code." />
+          </div>
+        </fieldset>
+
+        <fieldset class="form__section">
+          <legend class="form__section-head"><span class="form__section-num">02</span><span class="form__section-title">How you sell</span></legend>
+          <div class="form__row">
+            <Field name="businessType" label="Business type" type="select" options={businessTypes} required error="Please choose your business type." />
+          </div>
+          <CheckboxGroup name="channels" legend="Where you sell" options={salesChannels} requiredOne error="Choose at least one place where you sell." />
+          <CheckboxGroup name="categories" legend="Categories you buy" options={categoryOptions} requiredOne error="Choose at least one category." hint="We’ll match your first offers to these." />
+          <div class="form__row">
+            <Field name="monthlyVolume" label="Estimated monthly wholesale purchasing" type="select" options={monthlyVolumes} hint="A rough range helps us route your account. It isn’t a commitment." />
+          </div>
+        </fieldset>
+
+        <fieldset class="form__section">
+          <legend class="form__section-head"><span class="form__section-num">03</span><span class="form__section-title">Getting set up</span></legend>
+          <div class="form__row">
+            <Field
+              name="resaleCertificate"
+              label="Do you have a resale certificate?"
+              type="select"
+              options={resaleStatuses}
+              required
+              error="Please tell us your resale certificate status."
+              hint="Resale certificates let registered resellers buy without paying sales tax."
+            />
+            <Field name="referral" label="How did you hear about us?" type="select" options={referralSources} />
+            <Field name="message" label="Anything else we should know?" type="textarea" hint="Brands you’re looking for, where you ship, how often you reorder." rows={4} />
+          </div>
+        </fieldset>
+
+        <div class="hp" aria-hidden="true">
+          <label for="company_url">Leave this field empty</label>
+          <input id="company_url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="form__notice" data-notice hidden tabindex="-1" role="status"></div>
+
+        <div class="form__actions">
+          <button class="btn" type="submit">Submit application <Arrow /></button>
+          <p class="form__legal">By applying you agree to our <a href="/terms-conditions/">Terms</a> and <a href="/privacy-policy/">Privacy Policy</a>. We use your details only to review and manage your account.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import '@/scripts/forms';
+  // Pre-select a category when arriving from a category page (?category=health-beauty).
+  const pre = new URLSearchParams(location.search).get('category');
+  if (pre) {
+    const box = document.querySelector<HTMLInputElement>(`input[name="categories"][value="${CSS.escape(pre)}"]`);
+    if (box) box.checked = true;
+  }
+</script>
+
+<style>
+  .apply { row-gap: 48px; }
+  .apply__aside { grid-column: 1 / -1; order: 2; }
+  .apply__form { grid-column: 1 / -1; order: 1; }
+  .apply__sticky { display: grid; gap: 20px; padding-top: 14px; border-top: var(--rule-strong); }
+  .next { counter-reset: n; display: grid; gap: 14px; }
+  .next li { counter-increment: n; position: relative; padding-left: 30px; color: var(--text-secondary); font-size: var(--fs-body-sm); }
+  .next li::before { content: counter(n, decimal-leading-zero); position: absolute; left: 0; top: 2px; font-size: 0.75rem; font-weight: 600; color: var(--accent); }
+  .next strong { color: var(--text-primary); }
+  .apply__facts { border-top: var(--rule); }
+  .apply__facts div { padding: 12px 0; border-bottom: var(--rule); font-size: var(--fs-body-sm); display: grid; gap: 2px; }
+  .apply__facts dt { font-weight: 600; }
+  .apply__facts dd { color: var(--text-secondary); }
+  .apply__aside a { color: var(--text-primary); font-weight: 600; }
+  @media (min-width: 1024px) {
+    .apply__aside { grid-column: 1 / span 4; order: 0; }
+    .apply__sticky { position: sticky; top: calc(var(--header-h) + 24px); padding-right: 16px; }
+    .apply__form { grid-column: 5 / -1; }
+  }
+  @media (min-width: 1200px) { .apply__form { grid-column: 5 / span 7; } }
+</style>

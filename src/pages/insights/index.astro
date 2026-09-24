@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import ArticleList from '@/components/ui/ArticleList.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import { absoluteUrl } from '@/lib/seo';
+
+const articles = (await getCollection('insights', (a) => !a.data.draft))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || +b.data.published - +a.data.published);
+const topics = [...new Set(articles.map((a) => a.data.topic))];
+const topicId = (t: string) => t.toLowerCase().replace(/[^a-z]+/g, '-');
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Insights', path: '/insights/' }];
+const list = {
+  '@type': 'ItemList',
+  itemListElement: articles.map((a, i) => ({ '@type': 'ListItem', position: i + 1, url: absoluteUrl(`/insights/${a.id}/`), name: a.data.title })),
+};
+---
+<Base
+  title="Insights — Wholesale Buying Guides"
+  description="Practical guides for wholesale buyers: choosing and verifying distributors, resale certificates, lead times and category buying, from the 1Sources team."
+  path="/insights/"
+  pageType="CollectionPage"
+  breadcrumbs={crumbs}
+  schema={[list]}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="Insights"
+    title="Notes for wholesale buyers"
+    lead="Plain-language guides on how wholesale buying works — choosing and checking suppliers, paperwork, category realities and planning. Written for owners and buyers who order by the case."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <h2 class="visually-hidden">Latest insights</h2>
+      <ArticleList articles={articles.slice(0, 4)} />
+    </div>
+  </section>
+
+  {articles.length > 4 && (
+    <section class="section section--flush-top">
+      <div class="container">
+        {topics.map((t) => {
+          const inTopic = articles.slice(4).filter((a) => a.data.topic === t);
+          return inTopic.length > 0 && (
+            <div class="topic">
+              <h2 class="topic__t">{t}</h2>
+              <ArticleList articles={inTopic} lead={false} />
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <nav class="section section--tight band--paper" aria-labelledby="topics-title">
+    <div class="container topics">
+      <h2 class="eyebrow" id="topics-title">Topics</h2>
+      <ul role="list">
+        {topics.map((t) => (
+          <li id={topicId(t)}>
+            <span class="topics__name">{t}</span>
+            <span class="topics__list">
+              {articles.filter((a) => a.data.topic === t).map((a) => <a href={`/insights/${a.id}/`}>{a.data.title}</a>)}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+
+  <CTABand location="insights_index" />
+</Base>
+
+<style>
+  .topic + .topic { margin-top: var(--section-tight); }
+  .topic__t { font-size: var(--fs-h3); margin-bottom: 16px; }
+  .topics ul { margin-top: 16px; border-top: var(--rule-strong); }
+  .topics li { display: grid; gap: 6px; padding: 16px 0; border-bottom: 1px solid #d8d3c8; }
+  .topics__name { font-weight: 600; }
+  .topics__list { display: grid; gap: 4px; }
+  .topics__list a { color: var(--text-secondary); text-underline-offset: 3px; }
+  .topics__list a:hover { color: var(--accent); }
+  @media (min-width: 768px) { .topics li { grid-template-columns: 16rem 1fr; } }
+</style>

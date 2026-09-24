@@ -1,0 +1,243 @@
+---
+import { getCollection } from 'astro:content';
+import { site, primaryNav, whatsappUrl } from '@/config/site';
+import Logo from '@/components/ui/Logo.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+
+const categories = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const wa = whatsappUrl('Hello 1Sources — I have a wholesale question.');
+---
+<aside class="utility" aria-label="Company contact details">
+  <div class="container utility__inner">
+    <p class="utility__who">Wholesale distributor · {site.address.city}, {site.address.regionName}</p>
+    <ul class="utility__list" role="list">
+      <li><a href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location="utility">{site.phone.display}</a></li>
+      <li><a href={`mailto:${site.email}`} data-event="email_click" data-event-location="utility">{site.email}</a></li>
+    </ul>
+  </div>
+</aside>
+
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a class="header__logo" href="/" aria-label={`${site.name} home`}>
+      <Logo />
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul class="nav__list" role="list">
+        {primaryNav.map((item) =>
+          item.label === 'Categories' ? (
+            <li class="nav__item">
+              <button
+                class="nav__link nav__trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="mega-categories"
+                aria-current={isCurrent(item.href) ? 'true' : undefined}
+                data-mega-trigger
+              >
+                Categories <Arrow direction="down" size={13} />
+              </button>
+              <!-- Categories mega-menu (desktop) -->
+              <div class="mega" id="mega-categories" hidden data-mega>
+                <div class="container grid mega__inner">
+                  <div class="mega__intro">
+                    <p class="eyebrow">Categories</p>
+                    <p class="mega__lede">Name-brand consumer goods, sold by the case to approved business accounts.</p>
+                    <a class="tlink" href="/categories/">All categories <Arrow /></a>
+                    <a class="tlink mega__brands" href="/brands/">Brands we carry <Arrow /></a>
+                  </div>
+                  <ol class="mega__list" role="list">
+                    {categories.map((c, i) => (
+                      <li>
+                        <a class="mega__link" href={`/categories/${c.id}/`}>
+                          <span class="mega__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                          <span class="mega__name">{c.data.title}</span>
+                          <span class="mega__sum">{c.data.summary}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+            </li>
+          ) : (
+            <li class="nav__item">
+              <a class="nav__link" href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+            </li>
+          ),
+        )}
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a class="btn btn--compact header__cta" href="/open-account/" data-event="open_account_click" data-event-location="header">Open an Account</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-trigger>
+        <span class="menu-btn__label">Menu</span>
+        <span class="menu-btn__icon" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+</header>
+
+<!-- Mobile / tablet menu sheet -->
+<div class="sheet" id="mobile-menu" hidden data-menu>
+  <nav class="container sheet__inner" aria-label="Mobile">
+    <ul class="sheet__list" role="list">
+      {primaryNav.map((item) =>
+        item.label === 'Categories' ? (
+          <li>
+            <details class="sheet__group">
+              <summary class="sheet__link">Categories <Arrow direction="down" size={18} /></summary>
+              <ul class="sheet__sub" role="list">
+                <li><a href="/categories/">All categories</a></li>
+                {categories.map((c) => <li><a href={`/categories/${c.id}/`}>{c.data.title}</a></li>)}
+              </ul>
+            </details>
+          </li>
+        ) : (
+          <li><a class="sheet__link" href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ),
+      )}
+    </ul>
+    <div class="sheet__foot">
+      <a class="btn btn--block" href="/open-account/" data-event="open_account_click" data-event-location="mobile_menu">Open an Account <Arrow /></a>
+      <dl class="sheet__contact">
+        <div><dt>Call</dt><dd><a href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location="mobile_menu">{site.phone.display}</a></dd></div>
+        <div><dt>Email</dt><dd><a href={`mailto:${site.email}`} data-event="email_click" data-event-location="mobile_menu">{site.email}</a></dd></div>
+        {wa && <div><dt>WhatsApp</dt><dd><a href={wa} data-event="whatsapp_click" data-event-location="mobile_menu" rel="noopener">Message us</a></dd></div>}
+      </dl>
+    </div>
+  </nav>
+</div>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const megaBtn = document.querySelector<HTMLButtonElement>('[data-mega-trigger]');
+  const mega = document.querySelector<HTMLElement>('[data-mega]');
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-trigger]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  const setMega = (open: boolean) => {
+    if (!megaBtn || !mega) return;
+    megaBtn.setAttribute('aria-expanded', String(open));
+    mega.hidden = !open;
+    header?.classList.toggle('is-mega-open', open);
+  };
+  megaBtn?.addEventListener('click', () => setMega(megaBtn.getAttribute('aria-expanded') !== 'true'));
+
+  const setMenu = (open: boolean) => {
+    if (!menuBtn || !menu) return;
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.querySelector('.menu-btn__label')!.textContent = open ? 'Close' : 'Menu';
+    menu.hidden = !open;
+    document.documentElement.classList.toggle('menu-open', open);
+  };
+  menuBtn?.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (megaBtn?.getAttribute('aria-expanded') === 'true') { setMega(false); megaBtn.focus(); }
+    if (menuBtn?.getAttribute('aria-expanded') === 'true') { setMenu(false); menuBtn.focus(); }
+  });
+  document.addEventListener('click', (e) => {
+    const t = e.target as Node;
+    if (mega && !mega.hidden && !mega.contains(t) && !megaBtn?.contains(t)) setMega(false);
+  });
+  mega?.addEventListener('focusout', (e) => {
+    const next = e.relatedTarget as Node | null;
+    if (next && !mega.contains(next) && !megaBtn?.contains(next)) setMega(false);
+  });
+  matchMedia('(min-width: 1100px)').addEventListener('change', (mq) => { if (mq.matches) setMenu(false); else setMega(false); });
+</script>
+
+<style>
+  /* Utility bar */
+  .utility { background: var(--ink); color: var(--text-inverse-muted); font-size: 0.8125rem; display: none; }
+  .utility__inner { display: flex; align-items: center; justify-content: space-between; min-height: var(--utility-h); gap: 24px; }
+  .utility__list { display: flex; gap: 28px; }
+  .utility a { color: var(--paper); text-decoration: none; }
+  .utility a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  @media (min-width: 1100px) { .utility { display: block; } }
+
+  /* Header row */
+  .header { position: sticky; top: 0; z-index: 50; background: var(--white); border-bottom: 1px solid var(--border); }
+  .header__inner { display: flex; align-items: center; gap: 24px; min-height: var(--header-h); }
+  .header__logo { text-decoration: none; color: var(--ink); margin-right: auto; }
+  .nav { display: none; }
+  .header__actions { display: flex; align-items: center; gap: 12px; }
+  .header__cta { display: none; }
+  @media (min-width: 420px) { .header__cta { display: inline-flex; } }
+
+  @media (min-width: 1100px) {
+    .header__logo { margin-right: 0; }
+    .nav { display: block; margin-left: auto; }
+    .nav__list { display: flex; align-items: center; gap: clamp(14px, 1.6vw, 26px); }
+  }
+
+  .nav__link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: var(--fs-nav); font-weight: 500; text-decoration: none; color: var(--text-primary);
+    padding: 26px 0 24px; border-bottom: 2px solid transparent;
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .nav__link:hover { color: var(--accent); }
+  .nav__link[aria-current] { border-bottom-color: var(--accent); }
+  .nav__trigger .arrow { transition: transform var(--dur) var(--ease); }
+  .nav__trigger[aria-expanded='true'] { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav__trigger[aria-expanded='true'] .arrow { transform: rotate(180deg); }
+
+  /* Menu button */
+  .menu-btn { display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 4px 0 8px; font-weight: 600; font-size: var(--fs-body-sm); }
+  .menu-btn__icon { display: grid; gap: 5px; width: 20px; }
+  .menu-btn__icon span { display: block; height: 1.5px; background: currentColor; transition: transform var(--dur) var(--ease); }
+  .menu-btn[aria-expanded='true'] .menu-btn__icon span:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .menu-btn[aria-expanded='true'] .menu-btn__icon span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+  :global(html:not(.js)) .menu-btn { display: none; }
+  @media (min-width: 1100px) { .menu-btn { display: none; } }
+
+  /* Mega-menu */
+  .mega { position: absolute; inset: 100% 0 auto; background: var(--surface-elevated); border-bottom: 1px solid var(--border); box-shadow: var(--shadow-menu); }
+  .mega:not([hidden]) { animation: fade var(--dur) var(--ease); }
+  @keyframes fade { from { opacity: 0; transform: translateY(-4px); } }
+  .mega__inner { padding-block: 36px 44px; row-gap: 24px; }
+  .mega__intro { grid-column: 1 / span 3; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .mega__lede { color: var(--text-secondary); font-size: var(--fs-body-sm); max-width: 24ch; margin-bottom: 8px; }
+  .mega__brands { margin-top: 2px; }
+  .mega__list { grid-column: 4 / -1; display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--gutter); border-top: var(--rule-strong); }
+  .mega__link {
+    display: grid; grid-template-columns: 30px 1fr; column-gap: 8px;
+    padding: 14px 8px 14px 0; border-bottom: var(--rule); text-decoration: none;
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .mega__link:hover { background: var(--white); }
+  .mega__link:hover .mega__name { color: var(--accent); }
+  .mega__num { grid-row: span 2; color: var(--accent); font-size: var(--fs-label); font-weight: 600; padding-top: 3px; }
+  .mega__name { font-weight: 600; }
+  .mega__sum { font-size: 0.875rem; color: var(--text-muted); line-height: 1.4; }
+
+  /* Mobile sheet */
+  .sheet { position: fixed; inset: var(--header-h) 0 0; z-index: 49; background: var(--white); overflow-y: auto; overscroll-behavior: contain; }
+  .sheet:not([hidden]) { animation: fade var(--dur) var(--ease); }
+  :global(html.menu-open) { overflow: hidden; }
+  .sheet__inner { padding-block: 8px 40px; }
+  .sheet__list > li { border-bottom: var(--rule); }
+  .sheet__link {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; text-decoration: none; cursor: pointer; list-style: none;
+  }
+  .sheet__link::-webkit-details-marker { display: none; }
+  .sheet__link[aria-current] { color: var(--accent); }
+  .sheet__group[open] .arrow { transform: rotate(180deg); }
+  .sheet__sub { padding: 0 0 16px 0; columns: 2; column-gap: 16px; }
+  .sheet__sub a { display: block; padding: 8px 0; text-decoration: none; color: var(--text-secondary); }
+  .sheet__foot { margin-top: 28px; display: grid; gap: 28px; }
+  .sheet__contact { display: grid; gap: 12px; }
+  .sheet__contact div { display: grid; grid-template-columns: 90px 1fr; }
+  .sheet__contact dt { color: var(--text-muted); font-size: var(--fs-body-sm); }
+  .sheet__contact a { font-weight: 600; text-decoration: none; }
+  @media (min-width: 1100px) { .sheet { display: none; } }
+</style>

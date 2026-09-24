@@ -1,0 +1,41 @@
+# Apache equivalent of vercel.json — see docs/redirect-map.md
+RewriteEngine On
+RewriteRule ^services/?$ /capabilities/ [R=301,L]
+RewriteRule ^services/product-sourcing/?$ /capabilities/ [R=301,L]
+RewriteRule ^services/distribution-services/?$ /capabilities/ [R=301,L]
+RewriteRule ^services/inventory-management/?$ /capabilities/ [R=301,L]
+RewriteRule ^services/brand-finder/?$ /brands/ [R=301,L]
+RewriteRule ^blog/?$ /insights/ [R=301,L]
+RewriteRule ^unlock-the-potential-of-your-wholesale-business-with-1sources/?$ /insights/how-to-choose-a-wholesale-distributor/ [R=301,L]
+RewriteRule ^home/?$ / [R=301,L]
+RewriteRule ^about/?$ /about-us/ [R=301,L]
+RewriteRule ^contact/?$ /contact-us/ [R=301,L]
+RewriteRule ^terms/?$ /terms-conditions/ [R=301,L]
+RewriteRule ^privacy/?$ /privacy-policy/ [R=301,L]
+RewriteRule ^distribution-services/?$ /capabilities/ [R=301,L]
+RewriteRule ^product-sourcing/?$ /capabilities/ [R=301,L]
+RewriteRule ^inventory-management/?$ /capabilities/ [R=301,L]
+RewriteRule ^brand-finder/?$ /brands/ [R=301,L]
+RewriteRule ^feed/?$ /insights/ [R=301,L]
+RewriteRule ^comments/feed/?$ /insights/ [R=301,L]
+RewriteRule ^apply/?$ /open-account/ [R=301,L]
+RewriteRule ^account/?$ /open-account/ [R=301,L]
+RewriteRule ^new-account/?$ /open-account/ [R=301,L]
+RewriteRule ^wholesale-account/?$ /open-account/ [R=301,L]
+RewriteRule ^brands-we-carry/?$ /brands/ [R=301,L]
+RewriteRule ^manufacturers/?$ /brand-partners/ [R=301,L]
+RewriteRule ^for-brands/?$ /brand-partners/ [R=301,L]
+RewriteRule ^for-retailers/?$ /retailers/ [R=301,L]
+RewriteRule ^buyers/?$ /retailers/ [R=301,L]
+RewriteRule ^services/.*$ /capabilities/ [R=301,L]
+RewriteRule ^blog/.*$ /insights/ [R=301,L]
+RewriteRule ^category/.*$ /insights/ [R=301,L]
+RewriteRule ^author/.*$ /insights/ [R=301,L]
+
+ErrorDocument 404 /404.html
+<FilesMatch "\.(css|js|woff2)$">
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Frame-Options "SAMEORIGIN"

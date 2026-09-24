@@ -1,0 +1,132 @@
+---
+import '@/styles/forms.css';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import Field from '@/components/forms/Field.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { site, fullAddress, whatsappUrl } from '@/config/site';
+import { contactTopics } from '@/lib/leads';
+
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact-us/' }];
+const wa = whatsappUrl('Hello 1Sources — I have a wholesale question.');
+---
+<Base
+  title="Contact 1Sources — Wholesale Distributor, Jersey City"
+  description="Contact 1Sources in Jersey City, New Jersey. Call (973) 498-8191, email hello@1sources.com, or send a message about buying, accounts or brand distribution."
+  path="/contact-us/"
+  pageType="ContactPage"
+  breadcrumbs={crumbs}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="Contact"
+    title="Talk to the 1Sources team"
+    lead="Questions about buying, an existing account, or distributing your brand — call, email or send a message and a person will reply."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container grid contact">
+      <div class="contact__details">
+        <dl class="channels">
+          <div class="channels__row">
+            <dt class="eyebrow">Phone</dt>
+            <dd><a class="channels__big" href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location="contact_page">{site.phone.display}</a>{site.hours && <span>{site.hours}</span>}</dd>
+          </div>
+          <div class="channels__row">
+            <dt class="eyebrow">Email</dt>
+            <dd><a class="channels__big" href={`mailto:${site.email}`} data-event="email_click" data-event-location="contact_page">{site.email}</a><span>We reply within {site.responseTime}.</span></dd>
+          </div>
+          {wa && (
+            <div class="channels__row">
+              <dt class="eyebrow">WhatsApp</dt>
+              <dd><a class="channels__big" href={wa} rel="noopener" data-event="whatsapp_click" data-event-location="contact_page">Message us on WhatsApp</a><span>Handy for quick questions on offers and orders.</span></dd>
+            </div>
+          )}
+          <div class="channels__row">
+            <dt class="eyebrow">Address</dt>
+            <dd>
+              <address class="channels__addr">
+                {site.legalName && <>{site.legalName}<br /></>}
+                {site.address.street}<br />{site.address.city}, {site.address.region} {site.address.postalCode}
+              </address>
+              <a class="tlink" href={site.address.mapUrl} rel="noopener" target="_blank">Open in Google Maps <Arrow direction="up-right" size={14} /></a>
+            </dd>
+          </div>
+        </dl>
+
+        <div class="routes">
+          <p class="eyebrow">Quicker routes</p>
+          <ul role="list">
+            <li><a href="/open-account/" data-event="open_account_click" data-event-location="contact_page">Ready to buy? Open an account <Arrow /></a></li>
+            <li><a href="/faq/">Accounts, ordering &amp; shipping FAQ <Arrow /></a></li>
+            <li><a href="/brand-partners/">Information for brands <Arrow /></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <form
+        class="form contact__form"
+        method="post"
+        action={site.forms.endpoint ?? `mailto:${site.email}`}
+        enctype={site.forms.endpoint ? undefined : 'text/plain'}
+        data-lead-form
+        data-lead-type="contact"
+        data-event-prefix="contact_form"
+        data-endpoint={site.forms.endpoint ?? undefined}
+        data-fallback-email={site.email}
+        data-fallback-phone={site.phone.e164}
+        data-fallback-phone-display={site.phone.display}
+        data-response-time={site.responseTime}
+        aria-labelledby="contact-form-title"
+      >
+        <div class="form__summary" data-summary hidden role="alert"></div>
+        <fieldset class="form__section">
+          <legend class="form__section-head"><span class="form__section-num">→</span><span class="form__section-title" id="contact-form-title">Send a message</span></legend>
+          <div class="form__row">
+            <Field name="topic" label="What is this about?" type="select" options={contactTopics} required error="Please choose a topic." />
+            <Field name="name" label="Your name" required autocomplete="name" width="half" />
+            <Field name="company" label="Company" autocomplete="organization" width="half" />
+            <Field name="email" label="Email" type="email" required autocomplete="email" width="half" error="Please enter your email address." />
+            <Field name="phone" label="Phone" type="tel" autocomplete="tel" width="half" />
+            <Field name="message" label="Message" type="textarea" required error="Please tell us how we can help." rows={6} />
+          </div>
+        </fieldset>
+        <div class="hp" aria-hidden="true">
+          <label for="company_url">Leave this field empty</label>
+          <input id="company_url" name="company_url" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="form__notice" data-notice hidden tabindex="-1" role="status"></div>
+        <div class="form__actions">
+          <button class="btn" type="submit">Send message <Arrow /></button>
+          <p class="form__legal">We use your details only to respond. See our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import '@/scripts/forms';
+  const topic = new URLSearchParams(location.search).get('topic');
+  const select = document.querySelector<HTMLSelectElement>('#f-topic');
+  if (topic && select && [...select.options].some((o) => o.value === topic)) select.value = topic;
+</script>
+
+<style>
+  .contact { row-gap: 56px; }
+  .contact__details { grid-column: 1 / -1; display: grid; gap: 48px; align-content: start; }
+  .contact__form { grid-column: 1 / -1; }
+  .channels { border-top: var(--rule-strong); }
+  .channels__row { padding: 18px 0 20px; border-bottom: var(--rule); display: grid; gap: 8px; }
+  .channels dd { display: grid; gap: 6px; justify-items: start; color: var(--text-secondary); font-size: var(--fs-body-sm); }
+  .channels__big { font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem); font-weight: 600; letter-spacing: -0.015em; color: var(--text-primary); text-decoration: none; }
+  .channels__big:hover { color: var(--accent); }
+  .channels__addr { font-style: normal; font-size: var(--fs-body-lg); color: var(--text-primary); line-height: 1.45; }
+  .routes ul { margin-top: 12px; border-top: var(--rule); }
+  .routes a { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: var(--rule); text-decoration: none; font-weight: 600; }
+  .routes a:hover { color: var(--accent); }
+  @media (min-width: 1024px) {
+    .contact__details { grid-column: 1 / span 5; }
+    .contact__form { grid-column: 7 / -1; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+/**
+ * Trade-publication layout: one lead story, then a headline list.
+ * Typographic by design — no stock thumbnails.
+ */
+import type { CollectionEntry } from 'astro:content';
+import Arrow from '@/components/ui/Arrow.astro';
+import { readingTime, formatDate } from '@/lib/format';
+
+interface Props { articles: CollectionEntry<'insights'>[]; lead?: boolean; headingLevel?: 'h2' | 'h3'; }
+const { articles, lead = true, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const [first, ...rest] = lead ? articles : [undefined, ...articles];
+---
+<div class:list={['alist', { 'alist--lead': lead }]}>
+  {first && (
+    <article class="alist__lead">
+      <p class="alist__meta eyebrow"><span class="alist__topic">{first.data.topic}</span></p>
+      <H class="alist__lead-title"><a href={`/insights/${first.id}/`}>{first.data.title}</a></H>
+      <p class="alist__deck">{first.data.deck}</p>
+      <p class="alist__by t-small t-muted">
+        <time datetime={(first.data.updated ?? first.data.published).toISOString()}>{formatDate(first.data.updated ?? first.data.published)}</time>
+        · {readingTime(first.body)} min read
+      </p>
+      <a class="tlink" href={`/insights/${first.id}/`} aria-hidden="true" tabindex="-1">Read the guide <Arrow /></a>
+    </article>
+  )}
+  <ol class="alist__list" role="list">
+    {rest.filter(Boolean).map((a) => a && (
+      <li>
+        <article class="alist__item">
+          <p class="alist__meta eyebrow">{a.data.topic}</p>
+          <H class="alist__title"><a href={`/insights/${a.id}/`}>{a.data.title}</a></H>
+          <p class="t-small t-muted">
+            <time datetime={(a.data.updated ?? a.data.published).toISOString()}>{formatDate(a.data.updated ?? a.data.published)}</time>
+            · {readingTime(a.body)} min read
+          </p>
+        </article>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .alist { display: grid; gap: 32px; }
+  .alist a { text-decoration: none; }
+  .alist :is(h2, h3) a:hover { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .alist__meta { margin-bottom: 12px; }
+  .alist__topic { color: var(--accent); }
+  .alist__lead { display: grid; gap: 16px; align-content: start; padding-top: 16px; border-top: var(--rule-strong); }
+  .alist__lead .alist__meta { margin-bottom: 0; }
+  .alist__lead-title { font-size: clamp(1.75rem, 1.35rem + 1.5vw, 2.5rem); line-height: 1.08; letter-spacing: -0.022em; max-width: 18ch; }
+  .alist__deck { font-size: var(--fs-body-lg); color: var(--text-secondary); line-height: 1.5; max-width: 34rem; }
+  .alist__lead .tlink { justify-self: start; margin-top: 4px; }
+  .alist__list { border-top: var(--rule-strong); }
+  .alist__item { padding: 18px 0 20px; border-bottom: var(--rule); display: grid; gap: 8px; }
+  .alist__item .alist__meta { margin-bottom: 0; color: var(--text-muted); }
+  .alist__title { font-size: var(--fs-h4); line-height: 1.25; }
+  @media (min-width: 1024px) {
+    .alist--lead { grid-template-columns: 7fr 5fr; column-gap: calc(var(--gutter) * 2); }
+  }
+</style>

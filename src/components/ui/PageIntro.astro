@@ -1,0 +1,45 @@
+---
+import Breadcrumb from '@/components/ui/Breadcrumb.astro';
+import type { Crumb } from '@/lib/seo';
+
+interface Props {
+  crumbs: Crumb[];
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  tone?: 'default' | 'paper' | 'ink';
+}
+const { crumbs, eyebrow, title, lead, tone = 'default' } = Astro.props;
+const hasAside = Astro.slots.has('aside');
+---
+<header class:list={['intro', { 'band--paper': tone === 'paper', 'band--ink': tone === 'ink' }]}>
+  <div class="container">
+    <Breadcrumb items={crumbs} tone={tone === 'ink' ? 'inverse' : 'default'} />
+    <div class:list={['grid intro__grid', { 'intro__grid--aside': hasAside }]}>
+      <div class="intro__main">
+        {eyebrow && <p class="eyebrow intro__eyebrow">{eyebrow}</p>}
+        <h1 class="intro__title">{title}</h1>
+        {lead && <p class="intro__lead">{lead}</p>}
+        <slot />
+      </div>
+      {hasAside && <aside class="intro__aside"><slot name="aside" /></aside>}
+    </div>
+  </div>
+</header>
+
+<style>
+  .intro { padding-block: clamp(24px, 3vw, 36px) clamp(48px, 6vw, 88px); }
+  .intro__grid { margin-top: clamp(32px, 5vw, 72px); row-gap: 32px; align-items: end; }
+  .intro__main { grid-column: 1 / -1; display: grid; gap: 20px; justify-items: start; }
+  .intro__eyebrow { color: var(--accent); }
+  .band--ink .intro__eyebrow { color: var(--accent-on-dark); }
+  .intro__title { max-width: 18ch; }
+  .intro__lead { font-size: var(--fs-body-lg); line-height: 1.5; color: var(--text-secondary); max-width: 38rem; }
+  .band--ink .intro__lead { color: var(--text-inverse-muted); }
+  .intro__aside { grid-column: 1 / -1; }
+  @media (min-width: 1024px) {
+    .intro__main { grid-column: 1 / span 9; }
+    .intro__grid--aside .intro__main { grid-column: 1 / span 7; }
+    .intro__aside { grid-column: 9 / -1; }
+  }
+</style>

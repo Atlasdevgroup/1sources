@@ -1,0 +1,251 @@
+# Site-wide FAQ (/faq/). Rendered with FAQPage markup on /faq/ only.
+#
+# Client-specific facts are NOT stated in the visible answers until confirmed
+# (see docs/fact-verification.md). Placeholders live only in these comments:
+#   [MINIMUM ORDER]        minimum order value or quantity, if any
+#   [PAYMENT METHODS]      e.g. ACH, wire, card; whether net terms are offered
+#   [APPROVAL TIME]        typical time from application to approval
+#   [SERVICE AREA]         states / regions / export shipping
+#   [RETURN WINDOW]        days to report damages, shortages and returns
+#   [PREP CENTER POLICY]   confirm shipping to FBA / WFS prep centers
+#   [RESALE CERT POLICY]   confirm whether a certificate is required to buy
+# When the client confirms a value, rewrite the answer to state it plainly.
+
+# ---------------------------------------------------------------- Accounts
+- id: who-can-open-an-account
+  group: Accounts
+  order: 1
+  q: Who can open an account with 1Sources?
+  a: >-
+    Businesses that buy to resell. That includes independent and regional
+    retailers, grocery, pharmacy, beauty, convenience, discount and specialty
+    stores, ecommerce and marketplace sellers, and other wholesalers. You apply
+    with your business details, and the account team reviews each application
+    before any pricing or offers are shared.
+
+- id: resale-certificate
+  group: Accounts
+  order: 2
+  # [RESALE CERT POLICY] confirm whether a certificate is mandatory to buy.
+  q: Do I need a resale certificate?
+  a: >-
+    Wholesale purchases are generally exempt from sales tax only when the buyer
+    provides a valid resale or exemption certificate for the ship-to state.
+    The application asks whether you have one. The account team requests the
+    document during onboarding, and without it, sales tax may apply where
+    required by law.
+
+- id: what-to-apply
+  group: Accounts
+  order: 3
+  q: What information do I need to apply?
+  a: >-
+    The application asks for your company name, contact details, website and
+    business address, how and where you sell, the categories you buy, your
+    estimated monthly purchasing and your resale certificate status. It does
+    not ask for uploads or tax IDs. The account team requests those documents
+    during onboarding if your application moves forward.
+
+- id: approval-time
+  group: Accounts
+  order: 4
+  # [APPROVAL TIME] replace with the typical approval time once confirmed.
+  q: How long does account approval take?
+  a: >-
+    It depends mostly on how complete your application is and how quickly
+    onboarding documents come back. A member of the team reviews every
+    application and contacts you with next steps or questions. Having your
+    resale certificate and business details ready is the simplest way to avoid
+    delays.
+
+- id: sell-to-consumers
+  group: Accounts
+  order: 5
+  q: Do you sell to consumers?
+  a: >-
+    No. 1Sources is a wholesale distributor and sells only to businesses that
+    resell the products, by the case, through an approved account. There is no
+    retail store or consumer checkout. If you are looking for a single item for
+    personal use, a retailer that carries the brand is the right place to buy.
+
+# ---------------------------------------------------------------- Ordering
+- id: minimum-order
+  group: Ordering
+  order: 6
+  # [MINIMUM ORDER] state the account minimum here once confirmed.
+  q: Is there a minimum order?
+  a: >-
+    Products are sold by the case, so the case pack is the smallest unit on any
+    item. Beyond that, minimums depend on the brand and how the product ships,
+    for example parcel versus a pallet. Your account contact confirms the
+    minimums on each offer or quote before you place an order.
+
+- id: how-pricing-works
+  group: Ordering
+  order: 7
+  q: How do I see pricing?
+  a: >-
+    Pricing is shared with approved accounts, not published on the website.
+    Once your account is open, your account contact sends offer lists and
+    quotes that match the categories and brands you buy. You can also ask for
+    a quote on specific items. Each quote lists the product, case pack and
+    price, plus any dating or condition notes.
+
+- id: many-brands-one-order
+  group: Ordering
+  order: 8
+  q: Can I buy several brands and categories on one order?
+  a: >-
+    Yes. One account and one purchase order can cover many brands and
+    categories, such as health and beauty, household and grocery together. That
+    means fewer vendors to manage and, often, more efficient freight when
+    heavy and light items share a pallet. Your account contact confirms how a
+    combined order will ship.
+
+- id: payment-methods
+  group: Ordering
+  order: 9
+  # [PAYMENT METHODS] list accepted methods and whether net terms are offered.
+  q: What payment methods do you accept?
+  a: >-
+    Payment methods and any terms are set up with your account during
+    onboarding. New accounts should expect to settle payment arrangements
+    before the first order ships. Ask your account contact about the options
+    available to you, and whether they may change as your purchasing history
+    builds.
+
+- id: marketplace-sellers
+  group: Ordering
+  order: 10
+  q: Do you sell to Amazon, Walmart and other marketplace sellers?
+  a: >-
+    Yes, marketplace and ecommerce sellers are one of the buyer groups we
+    supply, and each order comes with an invoice. Marketplaces set their own
+    rules on brand approval, condition, dating and documentation, and
+    decisions on ungating are theirs. Check the requirements for each brand and
+    category you plan to list before you order.
+
+# ---------------------------------------------------------------- Shipping
+- id: shipping-methods
+  group: Shipping
+  order: 11
+  q: How do orders ship?
+  a: >-
+    Smaller orders typically ship by parcel carrier, and larger orders ship on
+    pallets by LTL (less-than-truckload) freight. The method depends on order
+    size, weight and any regulated items, such as aerosols or lithium
+    batteries. Tracking numbers or a bill of lading are shared when the order
+    ships.
+
+- id: shipping-area
+  group: Shipping
+  order: 12
+  # [SERVICE AREA] replace with confirmed states/regions/export policy.
+  q: Where do you ship?
+  a: >-
+    1Sources is based in Jersey City, New Jersey. Include your ship-to address
+    on your application, and your account contact will confirm whether and how
+    orders can be delivered there, along with the freight method. If you need
+    shipments to more than one location, mention that when you apply.
+
+- id: prep-centers
+  group: Shipping
+  order: 13
+  # [PREP CENTER POLICY] confirm FBA / WFS prep center shipping.
+  q: Can you ship to my prep center or 3PL?
+  a: >-
+    Orders can be addressed to your warehouse or to a third-party prep center
+    or 3PL, subject to confirmation on your account. Give your account contact
+    the receiving address, hours and any appointment or labeling requirements
+    before the order ships, so the delivery is not refused or delayed at the
+    dock.
+
+- id: damages-shortages
+  group: Shipping
+  order: 14
+  # [RETURN WINDOW] add the reporting window for damages/shortages.
+  q: What if an order arrives damaged or short?
+  a: >-
+    Inspect the delivery before signing, count the cartons against the bill of
+    lading and note any visible damage or shortage on the delivery receipt.
+    Take photos, then contact your account contact promptly with the order
+    number and details. Problems recorded at delivery are much easier to
+    resolve with the carrier.
+
+- id: returns
+  group: Shipping
+  order: 15
+  # [RETURN WINDOW] state the return policy once confirmed.
+  q: What is your returns policy?
+  a: >-
+    Returns are handled under the terms of your account, which are shared
+    during onboarding. Closeout and as-offered lots are often final sale, and
+    the offer says so when that applies. If there is a problem with an order,
+    contact your account contact before sending anything back so the return
+    can be authorized and tracked.
+
+# ------------------------------------------------ Brands & manufacturers
+- id: authentic-products
+  group: Brands & manufacturers
+  order: 16
+  q: Are your products authentic and name-brand?
+  a: >-
+    Yes. 1Sources sells name-brand consumer goods in original manufacturer
+    packaging, bought from brands, their distributors and other legitimate
+    inventory sources. Each offer describes the product and its condition,
+    including any short dating or packaging differences, so you know exactly
+    what you are buying before you commit.
+
+- id: brand-authorization
+  group: Brands & manufacturers
+  order: 17
+  q: Do the brands you sell authorize or endorse 1Sources?
+  a: >-
+    Not unless we say so, and we do not imply it. Some products are bought
+    directly from brands, and others through distributors or other legitimate
+    sources. A brand name on this site means 1Sources has supplied that
+    product, not that the brand has authorized or endorsed us. If a brand
+    relationship is formal, we will say so only with the brand's approval.
+
+- id: brands-start-conversation
+  group: Brands & manufacturers
+  order: 18
+  q: I represent a brand. How do we start a conversation?
+  a: >-
+    Use the Discuss Distribution option on our contact page and tell us about
+    your brand, your categories and the kinds of retailers you want to reach.
+    It helps to mention any channel rules you already have, such as marketplace
+    restrictions or pricing policies. Someone from the team will follow up to
+    discuss fit.
+
+- id: excess-inventory
+  group: Brands & manufacturers
+  order: 19
+  q: Do you buy excess or closeout inventory from brands?
+  a: >-
+    1Sources works with brands and other inventory owners on overstock,
+    discontinued and closeout opportunities. Send a description of the product,
+    quantities, condition and location through the contact page. We will
+    review it and let you know whether it fits the buyers we supply, including
+    any channel restrictions you need respected.
+
+# ---------------------------------------------------------- About 1Sources
+- id: where-located
+  group: About 1Sources
+  order: 20
+  q: Where is 1Sources located?
+  a: >-
+    1Sources is a wholesale distributor based in Jersey City, New Jersey. Our
+    business address is 629 Grove Street, Jersey City, NJ 07310. We sell
+    name-brand consumer goods by the case to approved business accounts,
+    including retailers, ecommerce sellers and other wholesalers.
+
+- id: how-to-contact
+  group: About 1Sources
+  order: 21
+  q: How do I contact 1Sources?
+  a: >-
+    Call +1 (973) 498-8191, email hello@1sources.com or use the form on our
+    contact page. If you already have an account, your account contact is the
+    fastest route for quotes and order questions. New buyers can apply
+    directly through the Open an Account page.

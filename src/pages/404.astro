@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import CategoryLedger from '@/components/home/CategoryLedger.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+
+const categories = (await getCollection('categories', (c) => c.data.confirmed)).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Page Not Found" description="The page you were looking for isn’t on 1sources.com." path="/404/" noindex>
+  <section class="section nf">
+    <div class="container grid">
+      <div class="nf__main">
+        <p class="eyebrow nf__code">404</p>
+        <h1>We couldn’t find that page.</h1>
+        <p class="t-lead">It may have moved when we rebuilt the site. These are the places most people are looking for.</p>
+        <div class="btn-row">
+          <a class="btn" href="/">Go to the homepage <Arrow /></a>
+          <a class="btn btn--secondary" href="/open-account/">Open an Account</a>
+          <a class="tlink" href="/contact-us/">Contact us</a>
+        </div>
+      </div>
+      <div class="nf__cats"><CategoryLedger categories={categories} /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf .grid { row-gap: 56px; }
+  .nf__main { grid-column: 1 / -1; display: grid; gap: 22px; justify-items: start; }
+  .nf__code { color: var(--accent); }
+  .nf__cats { grid-column: 1 / -1; }
+  @media (min-width: 1024px) {
+    .nf__main { grid-column: 1 / span 5; align-self: start; }
+    .nf__cats { grid-column: 7 / -1; }
+  }
+</style>

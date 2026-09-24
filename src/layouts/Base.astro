@@ -1,0 +1,80 @@
+---
+import '@fontsource-variable/schibsted-grotesk/wght.css';
+import '@/styles/global.css';
+import fontUrl from '@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2?url';
+import { site } from '@/config/site';
+import { type PageMeta, formatTitle, absoluteUrl, buildGraph } from '@/lib/seo';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+
+interface Props extends PageMeta {
+  /** Analytics event fired on load, e.g. category_view. */
+  viewEvent?: { name: string; params?: Record<string, string> };
+}
+
+const props = Astro.props;
+const title = formatTitle(props);
+const canonical = absoluteUrl(props.path);
+const image = absoluteUrl(props.image ?? site.ogImage);
+const robots = props.noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1';
+const graph = buildGraph(props);
+const gtm = site.analytics.gtmId;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={props.description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content={robots} />
+  <meta name="theme-color" content="#15191a" />
+
+  <meta property="og:type" content={props.ogType ?? 'website'} />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:title" content={props.title} />
+  <meta property="og:description" content={props.description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={image} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={props.imageAlt ?? `${site.name} — wholesale distribution`} />
+  <meta property="og:locale" content={site.locale} />
+  {props.article && <meta property="article:published_time" content={props.article.published.toISOString()} />}
+  {props.article?.modified && <meta property="article:modified_time" content={props.article.modified.toISOString()} />}
+  {props.article?.section && <meta property="article:section" content={props.article.section} />}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={props.title} />
+  <meta name="twitter:description" content={props.description} />
+  <meta name="twitter:image" content={image} />
+
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" href="/assets/brand/1sources-symbol.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+
+  <script is:inline>document.documentElement.classList.add('js');</script>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(graph)} />
+
+  {gtm && (
+    <script is:inline define:vars={{ gtm }}>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);
+    </script>
+  )}
+  <slot name="head" />
+</head>
+<body data-view-event={props.viewEvent ? JSON.stringify(props.viewEvent) : undefined}>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <Header />
+  <main id="main" tabindex="-1">
+    <slot />
+  </main>
+  <Footer />
+  <script>
+    import '@/scripts/analytics';
+  </script>
+</body>
+</html>

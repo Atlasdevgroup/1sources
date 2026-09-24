@@ -1,0 +1,124 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import MarginSection from '@/components/ui/MarginSection.astro';
+import ProcessRoute from '@/components/home/ProcessRoute.astro';
+import FAQList from '@/components/ui/FAQList.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'For Retailers', path: '/retailers/' }];
+const faqs = (await getCollection('faqs', (f) => ['Accounts', 'Ordering'].includes(f.data.group)))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 5)
+  .map((f) => ({ q: f.data.q, a: f.data.a }));
+
+const segments = [
+  { t: 'Independent & specialty retail', b: 'Keep core lines in stock without opening an account with every brand. Mix categories on one order and add opportunity buys when they suit your shelf.' },
+  { t: 'Regional chains', b: 'Supplement primary suppliers on gaps and promotions, or add categories your main distributor doesn’t carry well.' },
+  { t: 'Pharmacy, grocery & convenience', b: 'Health & beauty, household and grocery staples by the case, with dating stated on short-coded lots.' },
+  { t: 'Beauty & discount stores', b: 'Name-brand cosmetics, hair and personal care, plus packaging-change and overstock lots priced for your format.' },
+  { t: 'Ecommerce & marketplace sellers', b: 'Authentic, invoiced inventory in original packaging, shipped to your warehouse or prep center. Marketplace sellers are welcome — as business customers like any other.' },
+  { t: 'Wholesalers & exporters', b: 'Fill gaps in your own range and pick up lots that fit your customers.' },
+];
+---
+<Base
+  title="For Retailers — Wholesale Accounts for Resellers"
+  description="How retailers, ecommerce sellers and resellers buy from 1Sources: one wholesale account, offers from a named contact, mixed-brand orders and straightforward reorders."
+  path="/retailers/"
+  breadcrumbs={crumbs}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="For retailers & buyers"
+    title="One wholesale account for the brands your customers buy"
+    lead="1Sources supplies name-brand consumer goods by the case to stores, online sellers and other resellers. Apply once, work with a named contact, and buy across categories on a single purchase order."
+  >
+    <div class="btn-row" slot="aside">
+      <a class="btn" href="/open-account/" data-event="open_account_click" data-event-location="retailers_intro">Open an Account <Arrow /></a>
+      <a class="tlink" href="/faq/">Buyer FAQ</a>
+    </div>
+  </PageIntro>
+
+  <section class="section section--flush-top" aria-labelledby="seg-title">
+    <div class="container">
+      <MarginSection num="01" label="Who buys from us">
+        <h2 id="seg-title" class="r-h2">Built for businesses that resell</h2>
+        <div class="segs">
+          {segments.map((s) => (
+            <div class="segs__item">
+              <h3 class="segs__t">{s.t}</h3>
+              <p class="segs__b">{s.b}</p>
+            </div>
+          ))}
+        </div>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section band--paper" aria-labelledby="flow-title">
+    <div class="container">
+      <MarginSection num="02" label="How buying works">
+        <h2 id="flow-title" class="r-h2">From application to standing reorder</h2>
+        <ProcessRoute />
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="need-title">
+    <div class="container">
+      <MarginSection num="03" label="To open an account">
+        <div class="need">
+          <div>
+            <h2 id="need-title" class="r-h2">What we’ll ask for</h2>
+            <p class="t-secondary">
+              The application takes about five minutes. We ask for the basics about your business and how you sell. No
+              documents are needed to apply — we request resale paperwork during onboarding.
+            </p>
+            <a class="tlink need__link" href="/insights/how-resale-certificates-work/">How resale certificates work <Arrow /></a>
+          </div>
+          <ul class="need__list" role="list">
+            <li><span>Business details</span>Company name, address, website or store link</li>
+            <li><span>Contact</span>Who we’ll work with, and how to reach them</li>
+            <li><span>How you sell</span>Business type and sales channels</li>
+            <li><span>What you buy</span>Categories, brands and a rough monthly volume</li>
+            <li><span>Tax status</span>Whether you hold a resale certificate</li>
+          </ul>
+        </div>
+      </MarginSection>
+    </div>
+  </section>
+
+  {faqs.length > 0 && (
+    <section class="section section--flush-top" aria-labelledby="rfaq-title">
+      <div class="container">
+        <MarginSection num="04" label="Questions">
+          <h2 id="rfaq-title" class="r-h2">Common buyer questions</h2>
+          <FAQList items={faqs} />
+          <p class="more"><a class="tlink" href="/faq/">All questions <Arrow /></a></p>
+        </MarginSection>
+      </div>
+    </section>
+  )}
+
+  <CTABand location="retailers" title="Ready to open a wholesale account?" />
+</Base>
+
+<style>
+  .r-h2 { font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem); margin-bottom: 28px; max-width: 24ch; }
+  .segs { display: grid; border-top: var(--rule-strong); }
+  .segs__item { padding: 20px 0 22px; border-bottom: var(--rule); display: grid; gap: 6px; }
+  .segs__t { font-size: var(--fs-h4); }
+  .segs__b { color: var(--text-secondary); font-size: var(--fs-body-sm); max-width: 34rem; }
+  @media (min-width: 768px) {
+    .segs { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gutter) * 2); }
+  }
+  .need { display: grid; gap: 32px; }
+  .need__link { margin-top: 20px; }
+  .need__list { border-top: var(--rule-strong); }
+  .need__list li { padding: 12px 0; border-bottom: var(--rule); display: grid; gap: 2px; color: var(--text-secondary); font-size: var(--fs-body-sm); }
+  .need__list span { color: var(--text-primary); font-weight: 600; font-size: var(--fs-body); }
+  @media (min-width: 900px) { .need { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gutter) * 2); } }
+  .more { margin-top: 24px; }
+</style>

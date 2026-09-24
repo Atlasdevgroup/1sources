@@ -1,0 +1,43 @@
+---
+/** Standard content template — legal and policy pages from src/content/pages. */
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Breadcrumb from '@/components/ui/Breadcrumb.astro';
+import { formatDate } from '@/lib/format';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((entry) => ({ params: { page: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: CollectionEntry<'pages'> }
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const path = `/${entry.id}/`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: entry.data.title, path }];
+---
+<Base title={entry.data.metaTitle ?? entry.data.title} description={entry.data.description} path={path} breadcrumbs={crumbs}>
+  <div class="container std">
+    <Breadcrumb items={crumbs} />
+    <div class="grid std__grid">
+      <header class="std__head">
+        <h1>{entry.data.title}</h1>
+        <p class="t-small t-muted">Last updated <time datetime={entry.data.updated.toISOString()}>{formatDate(entry.data.updated)}</time></p>
+      </header>
+      <div class="prose std__body"><Content /></div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .std { padding-block: clamp(24px, 3vw, 36px) var(--section); }
+  .std__grid { margin-top: clamp(32px, 5vw, 64px); row-gap: 32px; }
+  .std__head { grid-column: 1 / -1; display: grid; gap: 12px; align-content: start; }
+  .std__body { grid-column: 1 / -1; }
+  @media (min-width: 1024px) {
+    .std__head { grid-column: 1 / span 4; position: sticky; top: calc(var(--header-h) + 24px); align-self: start; }
+    .std__head h1 { font-size: var(--fs-h2); }
+    .std__body { grid-column: 5 / span 7; }
+    .std__body > :global(h2:first-child) { margin-top: 0; }
+  }
+</style>

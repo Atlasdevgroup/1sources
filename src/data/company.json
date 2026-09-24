@@ -1,0 +1,23 @@
+{
+  "name": "1Sources",
+  "legalName": null,
+  "description": "1Sources is a wholesale distributor based in Jersey City, New Jersey, supplying name-brand consumer goods to retailers, ecommerce sellers and other professional resellers.",
+  "yearEstablished": null,
+  "serviceArea": null,
+  "address": {
+    "street": "629 Grove Street",
+    "city": "Jersey City",
+    "region": "NJ",
+    "regionName": "New Jersey",
+    "postalCode": "07310",
+    "country": "US"
+  },
+  "phone": { "display": "(973) 498-8191", "e164": "+19734988191" },
+  "email": "hello@1sources.com",
+  "whatsapp": null,
+  "hours": null,
+  "responseTime": "one business day",
+  "social": { "linkedin": null, "instagram": null },
+  "trust": { "duns": null, "bbb": null, "memberships": [] },
+  "accountTerms": { "minimumOrder": null, "paymentTerms": null, "approvalTime": null }
+}

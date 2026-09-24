@@ -1,0 +1,194 @@
+# Sveltia CMS (Decap-compatible) configuration.
+# Editors sign in with GitHub; every save is a commit to `main`, which Vercel deploys.
+# See README.md → "Editing content".
+backend:
+  name: github
+  repo: atlasdevgroup/1sources
+  branch: main
+  commit_messages:
+    create: 'Content: create {{collection}} “{{slug}}”'
+    update: 'Content: update {{collection}} “{{slug}}”'
+    delete: 'Content: delete {{collection}} “{{slug}}”'
+
+media_folder: public/assets/uploads
+public_folder: /assets/uploads
+site_url: https://1sources.com
+display_url: https://1sources.com
+
+collections:
+  - name: settings
+    label: Company information
+    files:
+      - name: company
+        label: Company, contact & trust details
+        file: src/data/company.json
+        description: Leave a field empty until the fact is confirmed — empty fields are hidden on the site.
+        fields:
+          - { name: name, label: Display name, widget: string }
+          - { name: legalName, label: Legal entity name, widget: string, required: false }
+          - { name: description, label: One-sentence company description, widget: text }
+          - { name: yearEstablished, label: Year established, widget: number, value_type: int, required: false }
+          - { name: serviceArea, label: Service area, widget: string, required: false, hint: 'e.g. "the contiguous United States"' }
+          - name: address
+            label: Address
+            widget: object
+            fields:
+              - { name: street, label: Street, widget: string }
+              - { name: city, label: City, widget: string }
+              - { name: region, label: State (abbr.), widget: string }
+              - { name: regionName, label: State (full name), widget: string }
+              - { name: postalCode, label: ZIP, widget: string }
+              - { name: country, label: Country code, widget: string, default: US }
+          - name: phone
+            label: Phone
+            widget: object
+            fields:
+              - { name: display, label: 'Display format, e.g. (973) 498-8191', widget: string }
+              - { name: e164, label: 'International format, e.g. +19734988191', widget: string }
+          - { name: email, label: Email, widget: string }
+          - { name: whatsapp, label: WhatsApp number (digits only, with country code), widget: string, required: false }
+          - { name: hours, label: Business hours, widget: string, required: false }
+          - { name: responseTime, label: 'Response-time promise (e.g. "one business day")', widget: string }
+          - name: social
+            label: Social profiles
+            widget: object
+            fields:
+              - { name: linkedin, label: LinkedIn URL, widget: string, required: false }
+              - { name: instagram, label: Instagram URL, widget: string, required: false }
+          - name: trust
+            label: Trust & verification
+            widget: object
+            fields:
+              - { name: duns, label: D-U-N-S number, widget: string, required: false }
+              - { name: bbb, label: BBB profile URL, widget: string, required: false }
+              - name: memberships
+                label: Memberships
+                widget: list
+                required: false
+                fields:
+                  - { name: name, label: Name, widget: string }
+                  - { name: url, label: URL, widget: string, required: false }
+          - name: accountTerms
+            label: Account terms
+            widget: object
+            fields:
+              - { name: minimumOrder, label: Minimum order, widget: string, required: false }
+              - { name: paymentTerms, label: Payment terms, widget: string, required: false }
+              - { name: approvalTime, label: Typical approval time, widget: string, required: false }
+
+      - name: brands
+        label: Brands
+        file: src/content/brands/brands.yaml
+        description: Only brands with “Show publicly” turned on appear on the site. Never add a brand without confirming you may name it.
+        fields:
+          - name: brands
+            label: Brands
+            widget: list
+            root: true
+            summary: '{{name}}'
+            fields:
+              - { name: id, label: 'ID (lowercase-with-dashes)', widget: string }
+              - { name: name, label: Brand name, widget: string }
+              - { name: categories, label: Categories, widget: relation, collection: categories, value_field: '{{slug}}', search_fields: [title], display_fields: [title], multiple: true }
+              - { name: featured, label: Feature on homepage, widget: boolean, default: false }
+              - { name: publicDisplay, label: Show publicly, widget: boolean, default: false }
+
+      - name: faqs
+        label: FAQ
+        file: src/content/faqs/faqs.yaml
+        fields:
+          - name: faqs
+            label: Questions
+            widget: list
+            root: true
+            summary: '{{group}} — {{q}}'
+            fields:
+              - { name: id, label: 'ID (lowercase-with-dashes)', widget: string }
+              - { name: group, label: Group, widget: select, options: [Accounts, Ordering, Shipping, 'Brands & manufacturers', 'About 1Sources'] }
+              - { name: order, label: Order, widget: number, value_type: int }
+              - { name: q, label: Question, widget: string }
+              - { name: a, label: Answer, widget: text }
+
+  - name: categories
+    label: Categories
+    folder: src/content/categories
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    summary: '{{order}}. {{title}}'
+    sortable_fields: [order, title]
+    fields:
+      - { name: title, label: Name, widget: string }
+      - { name: h1, label: Page heading (H1), widget: string }
+      - { name: metaTitle, label: Search title, widget: string, hint: Under 60 characters }
+      - { name: metaDescription, label: Search description, widget: text, hint: Under 160 characters }
+      - { name: order, label: Order, widget: number, value_type: int }
+      - { name: confirmed, label: Confirmed (publish to search engines), widget: boolean, default: false }
+      - { name: summary, label: One-line summary, widget: string }
+      - { name: definition, label: Two-sentence definition, widget: text }
+      - name: subcategories
+        label: Subcategories
+        widget: list
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: note, label: Note, widget: string, required: false }
+      - { name: buyers, label: Who buys it, widget: list }
+      - name: considerations
+        label: Before you order
+        widget: list
+        fields:
+          - { name: title, label: Title, widget: string }
+          - { name: body, label: Text, widget: text }
+      - { name: leadTime, label: Typical lead time, widget: string, required: false }
+      - name: faqs
+        label: Category FAQ
+        widget: list
+        fields:
+          - { name: q, label: Question, widget: string }
+          - { name: a, label: Answer, widget: text }
+      - { name: related, label: Related categories, widget: relation, collection: categories, value_field: '{{slug}}', search_fields: [title], display_fields: [title], multiple: true }
+      - { name: insights, label: Related insights, widget: relation, collection: insights, value_field: '{{slug}}', search_fields: [title], display_fields: [title], multiple: true, required: false }
+      - { name: body, label: Overview, widget: markdown }
+
+  - name: insights
+    label: Insights
+    folder: src/content/insights
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    summary: '{{title}} ({{published}})'
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: metaTitle, label: Search title (optional), widget: string, required: false }
+      - { name: description, label: Search description, widget: text, hint: Under 155 characters }
+      - { name: deck, label: Standfirst, widget: text }
+      - { name: topic, label: Topic, widget: select, options: [Wholesale Buying, Supplier Evaluation, Distribution, Ecommerce, Category Guides, Inventory Strategy, Retail Operations] }
+      - { name: author, label: Author, widget: string, default: 1Sources Editorial Team, hint: Use a real person’s name only with their permission }
+      - { name: published, label: Published, widget: datetime, time_format: false, format: YYYY-MM-DD }
+      - { name: updated, label: Updated, widget: datetime, time_format: false, format: YYYY-MM-DD, required: false }
+      - { name: featured, label: Featured, widget: boolean, default: false }
+      - { name: relatedCategories, label: Related categories, widget: relation, collection: categories, value_field: '{{slug}}', search_fields: [title], display_fields: [title], multiple: true, required: false }
+      - { name: cta, label: Call to action, widget: select, options: [account, brand, contact], default: account }
+      - name: sources
+        label: Sources
+        widget: list
+        required: false
+        fields:
+          - { name: title, label: Title, widget: string }
+          - { name: url, label: URL, widget: string }
+      - { name: draft, label: Draft (hidden), widget: boolean, default: false }
+      - { name: body, label: Article, widget: markdown }
+
+  - name: pages
+    label: Legal & policy pages
+    folder: src/content/pages
+    create: false
+    extension: md
+    format: frontmatter
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: description, label: Search description, widget: text }
+      - { name: updated, label: Last updated, widget: datetime, time_format: false, format: YYYY-MM-DD }
+      - { name: body, label: Content, widget: markdown }

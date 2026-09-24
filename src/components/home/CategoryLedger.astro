@@ -1,0 +1,55 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Arrow from '@/components/ui/Arrow.astro';
+
+interface Props { categories: CollectionEntry<'categories'>[]; headingLevel?: 'h2' | 'h3'; }
+const { categories } = Astro.props;
+---
+<ol class="ledger" role="list">
+  {categories.map((c, i) => (
+    <li class="ledger__row">
+      <a class="ledger__link" href={`/categories/${c.id}/`}>
+        <span class="ledger__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <span class="ledger__name">{c.data.title}</span>
+        <span class="ledger__sum">{c.data.summary}</span>
+        <span class="ledger__go"><Arrow size={20} /></span>
+      </a>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .ledger { border-top: var(--rule-strong); }
+  .ledger__row { border-bottom: var(--rule); }
+  .ledger__link {
+    display: grid;
+    grid-template-columns: 36px 1fr 24px;
+    grid-template-areas: 'num name go' '. sum sum';
+    column-gap: 12px;
+    row-gap: 4px;
+    align-items: baseline;
+    padding: 18px 0 20px;
+    text-decoration: none;
+    position: relative;
+    transition: background-color var(--dur) var(--ease);
+  }
+  .ledger__num { grid-area: num; color: var(--accent); font-size: var(--fs-label); font-weight: 600; }
+  .ledger__name { grid-area: name; font-size: var(--fs-h3); font-weight: 600; letter-spacing: -0.015em; line-height: 1.15; }
+  .ledger__sum { grid-area: sum; color: var(--text-secondary); font-size: var(--fs-body-sm); line-height: 1.45; }
+  .ledger__go { grid-area: go; color: var(--text-muted); align-self: center; transition: transform var(--dur) var(--ease), color var(--dur) var(--ease); }
+  .ledger__link:hover { background: linear-gradient(90deg, var(--background-secondary), transparent 85%); }
+  .ledger__link:hover .ledger__name { color: var(--accent); }
+  .ledger__link:hover .ledger__go { color: var(--accent); transform: translateX(4px); }
+
+  @media (min-width: 768px) {
+    .ledger__link {
+      grid-template-columns: 56px minmax(0, 5fr) minmax(0, 6fr) 28px;
+      grid-template-areas: 'num name sum go';
+      column-gap: var(--gutter);
+      padding: 22px 0;
+      align-items: center;
+    }
+    .ledger__link:hover { padding-left: 0; }
+    .ledger__sum { font-size: var(--fs-body); }
+  }
+</style>

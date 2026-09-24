@@ -1,0 +1,77 @@
+# Brands the current 1Sources site publicly named (logos or body text).
+#
+# CLIENT CONFIRMATION REQUIRED: publicDisplay is set to true only because the
+# client previously published these names. Each one is flagged in
+# docs/fact-verification.md (Brands). Before launch the client must confirm,
+# brand by brand, that 1Sources has supplied the product and is comfortable
+# naming it. Set publicDisplay: false for any brand that is not confirmed.
+#
+# Names are shown as text, never logos, with the trademark footnote on
+# /brands/. Listing a brand here never implies authorization or endorsement.
+# `featured: true` is limited to eight brands (homepage strip).
+
+- id: kraft
+  name: Kraft
+  categories: [food-grocery]
+  featured: true
+  publicDisplay: true
+
+- id: hasbro
+  name: Hasbro
+  categories: [toys-games]
+  featured: true
+  publicDisplay: true
+
+- id: mattel
+  name: Mattel
+  categories: [toys-games]
+  featured: true
+  publicDisplay: true
+
+- id: henkel
+  name: Henkel
+  categories: [household, health-beauty]
+  featured: true
+  publicDisplay: true
+
+- id: kenvue
+  name: Kenvue
+  categories: [health-beauty, personal-care]
+  featured: true
+  publicDisplay: true
+
+- id: johnson-johnson
+  name: Johnson & Johnson
+  categories: [health-beauty, personal-care]
+  featured: false
+  publicDisplay: true
+
+- id: colgate-palmolive
+  name: Colgate-Palmolive
+  categories: [personal-care, household]
+  featured: true
+  publicDisplay: true
+
+- id: orville-redenbachers
+  name: Orville Redenbacher's
+  categories: [food-grocery]
+  featured: false
+  publicDisplay: true
+
+- id: opi
+  name: OPI
+  categories: [health-beauty]
+  featured: false
+  publicDisplay: true
+
+- id: nestle
+  name: Nestlé
+  categories: [food-grocery]
+  featured: true
+  publicDisplay: true
+
+- id: loreal
+  name: L'Oréal
+  categories: [health-beauty]
+  featured: true
+  publicDisplay: true

@@ -1,0 +1,194 @@
+---
+import { getCollection, getEntries, render, type CollectionEntry } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Breadcrumb from '@/components/ui/Breadcrumb.astro';
+import ArticleList from '@/components/ui/ArticleList.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { site } from '@/config/site';
+import { absoluteUrl } from '@/lib/seo';
+import { formatDate, readingTime } from '@/lib/format';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('insights', (a) => !a.data.draft);
+  return articles.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: CollectionEntry<'insights'> }
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2);
+const minutes = readingTime(entry.body);
+const path = `/insights/${entry.id}/`;
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Insights', path: '/insights/' },
+  { name: d.title, path },
+];
+const categories = await getEntries(d.relatedCategories);
+const related = (await getCollection('insights', (a) => !a.data.draft && a.id !== entry.id))
+  .sort((a, b) => Number(b.data.topic === d.topic) - Number(a.data.topic === d.topic) || +b.data.published - +a.data.published)
+  .slice(0, 3);
+
+const cta = {
+  account: { title: 'Buying for a store or online business?', body: 'Apply for a 1Sources wholesale account. Tell us what you sell and your account contact will follow up with relevant offers.', label: 'Open an Account', href: '/open-account/', event: 'open_account_click' },
+  brand: { title: 'Looking for a distribution partner?', body: 'Talk to 1Sources about placing your products with vetted retail and ecommerce buyers.', label: 'Discuss Distribution', href: '/contact-us/?topic=brand', event: 'contact_click' },
+  contact: { title: 'Have a question about working with us?', body: 'Our team answers questions about accounts, sourcing and orders — by phone or email.', label: 'Contact Our Team', href: '/contact-us/', event: 'contact_click' },
+}[d.cta];
+
+const articleNode = {
+  '@type': 'Article',
+  '@id': `${absoluteUrl(path)}#article`,
+  headline: d.title,
+  description: d.description,
+  datePublished: d.published.toISOString(),
+  dateModified: (d.updated ?? d.published).toISOString(),
+  author: { '@type': 'Organization', name: d.author, url: absoluteUrl('/about-us/') },
+  publisher: { '@id': `${site.url}/#organization` },
+  mainEntityOfPage: { '@id': `${absoluteUrl(path)}#webpage` },
+  articleSection: d.topic,
+  wordCount: entry.body?.split(/\s+/).length,
+  image: absoluteUrl(site.ogImage),
+  inLanguage: 'en-US',
+  ...(d.sources.length ? { citation: d.sources.map((s) => ({ '@type': 'CreativeWork', name: s.title, url: s.url })) } : {}),
+};
+---
+<Base
+  title={d.metaTitle ?? d.title}
+  description={d.description}
+  path={path}
+  ogType="article"
+  breadcrumbs={crumbs}
+  schema={[articleNode]}
+  article={{ published: d.published, modified: d.updated, section: d.topic }}
+  viewEvent={{ name: 'article_view', params: { article: entry.id, topic: d.topic } }}
+>
+  <article class="article">
+    <header class="article__head">
+      <div class="container">
+        <Breadcrumb items={crumbs} />
+        <div class="grid article__head-grid">
+          <div class="article__head-main">
+            <p class="eyebrow article__topic"><a href={`/insights/#${d.topic.toLowerCase().replace(/[^a-z]+/g, '-')}`}>{d.topic}</a></p>
+            <h1 class="article__title">{d.title}</h1>
+            <p class="article__deck">{d.deck}</p>
+          </div>
+          <dl class="article__meta">
+            <div><dt>By</dt><dd>{d.author}</dd></div>
+            <div><dt>Published</dt><dd><time datetime={d.published.toISOString()}>{formatDate(d.published)}</time></dd></div>
+            {d.updated && <div><dt>Updated</dt><dd><time datetime={d.updated.toISOString()}>{formatDate(d.updated)}</time></dd></div>}
+            <div><dt>Reading time</dt><dd>{minutes} min</dd></div>
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <div class="container grid article__body">
+      {toc.length > 2 && (
+        <nav class="toc" aria-labelledby="toc-title">
+          <p class="eyebrow" id="toc-title">On this page</p>
+          <ol role="list">
+            {toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}
+          </ol>
+        </nav>
+      )}
+
+      <div class="article__content">
+        <div class="prose"><Content /></div>
+
+        {d.sources.length > 0 && (
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 class="eyebrow" id="sources-title">Sources</h2>
+            <ol>
+              {d.sources.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.title}</a></li>)}
+            </ol>
+          </section>
+        )}
+
+        <aside class="article-cta band--ink cut-br" aria-labelledby="acta-title">
+          <h2 id="acta-title" class="article-cta__t">{cta.title}</h2>
+          <p>{cta.body}</p>
+          <a class="btn btn--on-dark" href={cta.href} data-event="article_cta_click" data-event-article={entry.id} data-event-target={cta.event}>{cta.label} <Arrow /></a>
+        </aside>
+
+        <footer class="article__foot">
+          {categories.length > 0 && (
+            <nav aria-labelledby="art-cats">
+              <p class="eyebrow" id="art-cats">Related categories</p>
+              <ul role="list" class="article__cats">
+                {categories.map((c) => <li><a href={`/categories/${c.id}/`}>{c.data.title} <Arrow size={14} /></a></li>)}
+              </ul>
+            </nav>
+          )}
+          <div class="about-box">
+            <p class="eyebrow">About the publisher</p>
+            <p>{site.description} <a href="/about-us/">More about 1Sources</a>.</p>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="section band--paper" aria-labelledby="more-title">
+      <div class="container">
+        <div class="more-head">
+          <h2 id="more-title">More for wholesale buyers</h2>
+          <a class="tlink" href="/insights/">All insights <Arrow /></a>
+        </div>
+        <ArticleList articles={related} lead={false} />
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .article__head { padding-block: clamp(24px, 3vw, 36px) clamp(40px, 5vw, 64px); }
+  .article__head-grid { margin-top: clamp(32px, 5vw, 64px); row-gap: 32px; align-items: end; }
+  .article__head-main { grid-column: 1 / -1; display: grid; gap: 20px; }
+  .article__topic a { color: var(--accent); text-decoration: none; }
+  .article__title { font-size: clamp(2.125rem, 1.5rem + 2.4vw, 3.375rem); max-width: 20ch; }
+  .article__deck { font-size: var(--fs-body-lg); line-height: 1.5; color: var(--text-secondary); max-width: 40rem; }
+  .article__meta { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; border-top: var(--rule-strong); font-size: var(--fs-body-sm); }
+  .article__meta div { padding: 10px 12px 10px 0; border-bottom: var(--rule); }
+  .article__meta dt { color: var(--text-muted); font-size: 0.8125rem; }
+  .article__meta dd { font-weight: 600; }
+  @media (min-width: 1024px) {
+    .article__head-main { grid-column: 1 / span 8; }
+    .article__meta { grid-column: 10 / -1; grid-template-columns: 1fr; }
+  }
+
+  .article__body { padding-bottom: var(--section); row-gap: 32px; }
+  .toc { grid-column: 1 / -1; font-size: var(--fs-body-sm); border-top: var(--rule-strong); padding-top: 14px; }
+  .toc ol { display: grid; gap: 10px; margin-top: 14px; counter-reset: t; }
+  .toc li { counter-increment: t; display: grid; grid-template-columns: 24px 1fr; }
+  .toc li::before { content: counter(t, decimal-leading-zero); color: var(--accent); font-weight: 600; font-size: 0.75rem; padding-top: 2px; }
+  .toc a { text-decoration: none; color: var(--text-secondary); line-height: 1.4; }
+  .toc a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .article__content { grid-column: 1 / -1; min-width: 0; }
+  @media (min-width: 1024px) {
+    .toc { grid-column: 1 / span 3; position: sticky; top: calc(var(--header-h) + 24px); align-self: start; max-height: calc(100vh - var(--header-h) - 48px); overflow: auto; }
+    .article__content { grid-column: 4 / span 8; }
+  }
+  .article__content .prose > :global(p:first-child) { font-size: var(--fs-body-lg); line-height: 1.55; }
+
+  .sources { margin-top: 56px; padding-top: 16px; border-top: var(--rule-strong); max-width: var(--reading); }
+  .sources ol { margin-top: 14px; padding-left: 1.4em; display: grid; gap: 8px; font-size: var(--fs-body-sm); color: var(--text-secondary); }
+  .sources a { color: var(--text-secondary); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .sources a:hover { color: var(--accent); }
+
+  .article-cta { margin-top: 56px; padding: clamp(28px, 4vw, 44px); display: grid; gap: 16px; justify-items: start; max-width: var(--reading); }
+  .article-cta__t { font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem); max-width: 20ch; }
+  .article-cta p { color: var(--text-inverse-muted); max-width: 34rem; }
+  .article-cta .btn { margin-top: 8px; margin-bottom: calc(var(--cut) * 0.3); }
+
+  .article__foot { margin-top: 48px; display: grid; gap: 32px; max-width: var(--reading); }
+  .article__foot .eyebrow { margin-bottom: 12px; }
+  .article__cats { display: flex; flex-wrap: wrap; gap: 8px; }
+  .article__cats a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius-1); text-decoration: none; font-weight: 600; font-size: var(--fs-body-sm); }
+  .article__cats a:hover { border-color: var(--ink); }
+  .about-box { padding-top: 16px; border-top: var(--rule); color: var(--text-secondary); font-size: var(--fs-body-sm); }
+  .about-box a { color: var(--text-primary); }
+
+  .more-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 32px; }
+</style>

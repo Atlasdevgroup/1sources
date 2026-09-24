@@ -1,0 +1,44 @@
+---
+/**
+ * Labelled form field. Label above, hint below label, error slot below input.
+ * Validation is native (required/type/pattern) and enhanced by src/scripts/forms.ts.
+ */
+interface Props {
+  name: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel' | 'url' | 'select' | 'textarea';
+  required?: boolean;
+  hint?: string;
+  autocomplete?: string;
+  options?: readonly (string | { value: string; label: string })[];
+  value?: string;
+  error?: string;
+  width?: 'full' | 'half' | 'third';
+  rows?: number;
+  inputmode?: 'text' | 'email' | 'tel' | 'url' | 'numeric';
+}
+const {
+  name, label, type = 'text', required = false, hint, autocomplete, options = [], value,
+  error = required ? `Please enter ${label.toLowerCase()}.` : undefined, width = 'full', rows = 5, inputmode,
+} = Astro.props;
+const id = `f-${name}`;
+const describedBy = [hint && `${id}-hint`, `${id}-error`].filter(Boolean).join(' ');
+const opts = options.map((o) => (typeof o === 'string' ? { value: o, label: o } : o));
+---
+<div class:list={['field', `field--${width}`]} data-field>
+  <label class="field__label" for={id}>
+    {label}{required ? <span class="field__req"> (required)</span> : <span class="field__opt"> (optional)</span>}
+  </label>
+  {hint && <p class="field__hint" id={`${id}-hint`}>{hint}</p>}
+  {type === 'select' ? (
+    <select class="field__input" id={id} name={name} required={required} aria-describedby={describedBy} autocomplete={autocomplete}>
+      <option value="" selected={!value}>Select…</option>
+      {opts.map((o) => <option value={o.value} selected={o.value === value}>{o.label}</option>)}
+    </select>
+  ) : type === 'textarea' ? (
+    <textarea class="field__input" id={id} name={name} rows={rows} required={required} aria-describedby={describedBy}>{value}</textarea>
+  ) : (
+    <input class="field__input" id={id} name={name} type={type} required={required} autocomplete={autocomplete} aria-describedby={describedBy} value={value} inputmode={inputmode} />
+  )}
+  <p class="field__error" id={`${id}-error`} data-error-message={error} hidden></p>
+</div>

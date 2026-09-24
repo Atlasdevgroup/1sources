@@ -1,0 +1,55 @@
+---
+import { site, fullAddress } from '@/config/site';
+import Arrow from '@/components/ui/Arrow.astro';
+
+interface Props {
+  title?: string;
+  body?: string;
+  location: string;
+  primary?: { label: string; href: string; event: string };
+  secondary?: { label: string; href: string; event: string };
+}
+const {
+  title = 'Looking for a better wholesale supply partner?',
+  body = 'Tell us what you sell and where. If we can supply it, your account contact will be in touch with offers — if we can’t, we’ll say so.',
+  location,
+  primary = { label: 'Open an Account', href: '/open-account/', event: 'open_account_click' },
+  secondary = { label: 'Contact Our Team', href: '/contact-us/', event: 'contact_click' },
+} = Astro.props;
+---
+<section class="cta band--paper" aria-labelledby={`cta-${location}`}>
+  <div class="container grid cta__grid">
+    <div class="cta__main">
+      <h2 class="cta__title" id={`cta-${location}`}>{title}</h2>
+      <p class="cta__body">{body}</p>
+      <div class="btn-row">
+        <a class="btn" href={primary.href} data-event={primary.event} data-event-location={location}>{primary.label} <Arrow /></a>
+        <a class="btn btn--secondary" href={secondary.href} data-event={secondary.event} data-event-location={location}>{secondary.label}</a>
+      </div>
+    </div>
+    <dl class="cta__contact">
+      <div><dt class="eyebrow">Call</dt><dd><a href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location={location}>{site.phone.display}</a></dd></div>
+      <div><dt class="eyebrow">Email</dt><dd><a href={`mailto:${site.email}`} data-event="email_click" data-event-location={location}>{site.email}</a></dd></div>
+      <div><dt class="eyebrow">Visit</dt><dd>{fullAddress}</dd></div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .cta { padding-block: var(--section-loose) var(--section); border-top: var(--rule); }
+  .cta__grid { row-gap: 48px; align-items: end; }
+  .cta__main { grid-column: 1 / -1; display: grid; gap: 24px; }
+  .cta__title { font-size: clamp(2rem, 1.35rem + 2.6vw, 3.5rem); line-height: 1.04; letter-spacing: -0.026em; max-width: 17ch; }
+  .cta__body { color: var(--text-secondary); font-size: var(--fs-body-lg); line-height: 1.5; max-width: 34rem; }
+  .cta .btn-row { margin-top: 8px; }
+  .cta__contact { grid-column: 1 / -1; border-top: var(--rule-strong); }
+  .cta__contact div { display: grid; grid-template-columns: 5rem 1fr; gap: 12px; padding: 14px 0; border-bottom: var(--rule); align-items: baseline; }
+  .cta__contact dt { color: var(--text-muted); }
+  .cta__contact dd { font-weight: 600; }
+  .cta__contact a { text-decoration: none; }
+  .cta__contact a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  @media (min-width: 1024px) {
+    .cta__main { grid-column: 1 / span 7; }
+    .cta__contact { grid-column: 9 / -1; }
+  }
+</style>

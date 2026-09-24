@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props {
+  brands: CollectionEntry<'brands'>[];
+  categoryNames: Record<string, string>;
+  size?: 'lg' | 'md';
+}
+const { brands, categoryNames, size = 'lg' } = Astro.props;
+---
+<ul class:list={['brands', `brands--${size}`]} role="list">
+  {brands.map((b) => (
+    <li class="brands__item">
+      <span class="brands__name">{b.data.name}</span>
+      <span class="brands__cats">{b.data.categories.map((c) => categoryNames[c.id]).filter(Boolean).join(' · ')}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .brands { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: var(--rule-strong); }
+  .brands__item { padding: 18px 16px 20px 0; border-bottom: var(--rule); display: grid; gap: 4px; align-content: start; }
+  .brands__name { font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem); }
+  .brands--md .brands__name { font-size: var(--fs-h4); }
+  .brands__cats { font-size: 0.8125rem; color: var(--text-muted); }
+  @media (min-width: 900px) {
+    .brands { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .brands__item { padding: 24px 20px 26px 0; }
+    .brands__item:not(:nth-child(4n + 1)) { padding-left: 20px; border-left: var(--rule); }
+  }
+  @media (max-width: 899px) {
+    .brands__item:nth-child(even) { padding-left: 16px; border-left: var(--rule); }
+  }
+</style>

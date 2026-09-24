@@ -1,0 +1,14 @@
+---
+/** The signature layout: numbered margin label in cols 1–3, content in 4–12. */
+interface Props { num?: string; label: string; id?: string; sticky?: boolean; labelTag?: 'p' | 'h2'; }
+const { num, label, id, sticky = false, labelTag = 'p' } = Astro.props;
+const Tag = labelTag;
+---
+<div class:list={['grid msec', { 'msec--sticky': sticky }]} id={id}>
+  <div class="msec__label">
+    {num && <span class="eyebrow msec__num" aria-hidden="true">{num}</span>}
+    <Tag class="eyebrow">{label}</Tag>
+    <slot name="note" />
+  </div>
+  <div class="msec__body"><slot /></div>
+</div>

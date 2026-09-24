@@ -1,0 +1,45 @@
+---
+import Base from '@/layouts/Base.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { site } from '@/config/site';
+---
+<Base
+  title="Application Received"
+  description="Your 1Sources wholesale account application has been received."
+  path="/open-account/success/"
+  noindex
+>
+  <section class="section">
+    <div class="container grid done">
+      <div class="done__main">
+        <p class="eyebrow done__eyebrow">Application received</p>
+        <h1>Thank you. We’ll be in touch.</h1>
+        <p class="t-lead">
+          Someone from the 1Sources team will review your application and reply within {site.responseTime}. If we
+          need anything else — resale documentation, for example — we’ll ask then.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--secondary" href="/categories/">Browse categories <Arrow /></a>
+          <a class="tlink" href="/insights/how-resale-certificates-work/">How resale certificates work</a>
+        </div>
+      </div>
+      <dl class="done__contact">
+        <div><dt class="eyebrow">Questions?</dt><dd><a href={`tel:${site.phone.e164}`}>{site.phone.display}</a></dd></div>
+        <div><dt class="eyebrow">Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+      </dl>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .done { row-gap: 48px; align-items: end; }
+  .done__main { grid-column: 1 / -1; display: grid; gap: 24px; justify-items: start; }
+  .done__eyebrow { color: var(--accent); }
+  .done__contact { grid-column: 1 / -1; border-top: var(--rule-strong); }
+  .done__contact div { padding: 14px 0; border-bottom: var(--rule); display: grid; gap: 4px; }
+  .done__contact a { font-weight: 600; text-decoration: none; }
+  @media (min-width: 1024px) {
+    .done__main { grid-column: 1 / span 7; }
+    .done__contact { grid-column: 9 / -1; }
+  }
+</style>

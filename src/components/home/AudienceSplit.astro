@@ -1,0 +1,70 @@
+---
+import Arrow from '@/components/ui/Arrow.astro';
+---
+<section class="section audience" aria-label="Who we work with">
+  <div class="container grid audience__grid">
+    <article class="panel panel--buyers band--ink cut-br" aria-labelledby="aud-buyers">
+      <p class="eyebrow">For retailers &amp; buyers</p>
+      <h2 id="aud-buyers">Supply you can plan a shelf around.</h2>
+      <p class="panel__lead">
+        Independent stores, regional chains, pharmacies, grocers, ecommerce sellers and other wholesalers buy from
+        1Sources on a wholesale account. You get offers from a named contact, quotes that state what you're
+        actually buying, and a straightforward way to reorder what sells.
+      </p>
+      <ul class="panel__list" role="list">
+        <li><span>Account access</span> Apply once. Buy across every category we carry.</li>
+        <li><span>Offers &amp; quotes</span> Case pack, condition and dating stated up front.</li>
+        <li><span>Replenishment</span> Reorder core lines and hear about opportunity buys.</li>
+        <li><span>One contact</span> A person who knows your account, not a ticket queue.</li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--on-dark" href="/open-account/" data-event="open_account_click" data-event-location="home_buyers">Open an Account <Arrow /></a>
+        <a class="tlink" href="/retailers/">How buying works</a>
+      </div>
+    </article>
+
+    <article class="panel panel--brands" aria-labelledby="aud-brands">
+      <p class="eyebrow">For brands &amp; manufacturers</p>
+      <h2 id="aud-brands">Distribution that respects your channel.</h2>
+      <p class="panel__lead">
+        We place product with vetted, professional resellers across retail and ecommerce, and talk plainly about where
+        it goes. For new lines, regional expansion, or inventory that needs a home, start with a conversation.
+      </p>
+      <ul class="panel__list" role="list">
+        <li><span>Retail reach</span> Buyers across grocery, pharmacy, beauty, discount and online.</li>
+        <li><span>Channel care</span> Your pricing and marketplace policies are part of the brief.</li>
+        <li><span>Inventory movement</span> Excess, discontinued and packaging-change stock.</li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--secondary" href="/contact-us/?topic=brand" data-event="contact_click" data-event-location="home_brands">Discuss Distribution <Arrow /></a>
+        <a class="tlink" href="/brand-partners/">For brands</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+  .audience__grid { row-gap: var(--gutter); align-items: stretch; }
+  .panel { grid-column: 1 / -1; padding: clamp(28px, 4vw, 56px); display: flex; flex-direction: column; gap: 20px; }
+  .panel h2 { max-width: 16ch; }
+  .panel__lead { color: var(--text-secondary); max-width: 36rem; }
+  .panel--buyers .panel__lead { color: var(--text-inverse-muted); }
+  .panel--brands { background: var(--background-secondary); }
+  .panel__list { display: grid; gap: 0; margin-block: 8px 12px; border-top: 1px solid var(--border); }
+  .panel--buyers .panel__list { border-top-color: var(--border-inverse); }
+  .panel__list li { padding: 12px 0; border-bottom: 1px solid var(--border); font-size: var(--fs-body-sm); color: var(--text-secondary); display: grid; gap: 2px; }
+  .panel--buyers .panel__list li { border-bottom-color: var(--border-inverse); color: var(--text-inverse-muted); }
+  .panel__list span { font-weight: 600; color: var(--text-primary); font-size: var(--fs-body); }
+  .panel--buyers .panel__list span { color: var(--paper); }
+  .panel .btn-row { margin-top: auto; padding-top: 8px; }
+  .panel--buyers .tlink { color: var(--paper); }
+
+  @media (min-width: 640px) {
+    .panel__list li { grid-template-columns: 11rem 1fr; gap: 16px; align-items: baseline; }
+  }
+  @media (min-width: 1024px) {
+    .panel--buyers { grid-column: 1 / span 7; padding-bottom: calc(56px + var(--cut) * 0.4); }
+    .panel--brands { grid-column: 8 / -1; margin-top: clamp(48px, 6vw, 96px); }
+    .panel--brands .panel__list li { grid-template-columns: 1fr; gap: 2px; }
+  }
+</style>

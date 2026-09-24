@@ -1,0 +1,163 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Hero from '@/components/home/Hero.astro';
+import CategoryLedger from '@/components/home/CategoryLedger.astro';
+import AudienceSplit from '@/components/home/AudienceSplit.astro';
+import ProcessRoute from '@/components/home/ProcessRoute.astro';
+import MarginSection from '@/components/ui/MarginSection.astro';
+import BrandIndex from '@/components/ui/BrandIndex.astro';
+import ArticleList from '@/components/ui/ArticleList.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { site } from '@/config/site';
+
+const categories = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
+const categoryNames = Object.fromEntries(categories.map((c) => [c.id, c.data.title]));
+const brands = (await getCollection('brands', (b) => b.data.publicDisplay && b.data.featured)).slice(0, 8);
+const articles = (await getCollection('insights', (a) => !a.data.draft))
+  .sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || +b.data.published - +a.data.published)
+  .slice(0, 4);
+
+const reasons = [
+  {
+    title: 'One purchase order, many brands',
+    body: 'Buy health & beauty, household and grocery lines on the same order instead of opening a vendor account for each brand. Fewer invoices, fewer minimums to hit, one freight bill.',
+  },
+  {
+    title: 'A named account contact',
+    body: 'Your offers come from a person who knows what you stock, what you won’t touch, and how you receive freight — and who answers the phone.',
+  },
+  {
+    title: 'Offers with the facts on them',
+    body: 'Case pack, condition, and dating on anything short-coded are stated before you commit. The questions you would ask at receiving get answered at quoting.',
+  },
+  {
+    title: 'Replenishment and opportunity',
+    body: 'Steady supply of the lines you reorder, plus first word on packaging changes, overstock and seasonal buys that suit your shelf.',
+  },
+  {
+    title: 'Straight answers on sourcing',
+    body: 'We tell you where product comes from and never describe ourselves as an authorized distributor for a brand unless that brand has said so in writing.',
+  },
+];
+---
+<Base
+  title="1Sources — Wholesale Distributor in Jersey City, NJ | Name-Brand Consumer Goods"
+  absoluteTitle
+  description="1Sources is a wholesale distributor in Jersey City, New Jersey, supplying name-brand health & beauty, household, grocery, toys and electronics to retailers and resellers."
+  path="/"
+  imageAlt="1Sources — wholesale distribution built around relationships"
+>
+  <Hero />
+
+  <section class="section" aria-labelledby="cats-title">
+    <div class="container">
+      <MarginSection num="01" label="Categories">
+        <div class="home-head">
+          <h2 id="cats-title">What we distribute</h2>
+          <p class="t-lead">
+            Consumer goods that retailers restock every week, sold by the case. Each category has its own buying
+            realities — dating, labeling, seasonality, freight — and we plan around them with you.
+          </p>
+        </div>
+        <CategoryLedger categories={categories} />
+        <p class="home-foot"><a class="tlink" href="/categories/">All categories <Arrow /></a></p>
+      </MarginSection>
+    </div>
+  </section>
+
+  <AudienceSplit />
+
+  {brands.length > 0 && (
+    <section class="section section--tight" aria-labelledby="brands-title">
+      <div class="container">
+        <MarginSection num="02" label="Brands">
+          <div class="home-head home-head--row">
+            <h2 id="brands-title">Brands buyers ask us for</h2>
+            <a class="tlink" href="/brands/">Explore all brands <Arrow /></a>
+          </div>
+          <BrandIndex brands={brands} categoryNames={categoryNames} />
+          <p class="t-small t-muted brands-note">
+            Trademarks belong to their owners. A listing shows product we supply, not an authorization or endorsement.
+          </p>
+        </MarginSection>
+      </div>
+    </section>
+  )}
+
+  <section class="section band--paper" aria-labelledby="process-title">
+    <div class="container">
+      <div class="grid process-head">
+        <p class="eyebrow process-head__label"><span class="msec__num">03</span> How an account works</p>
+        <h2 id="process-title" class="process-head__title">From first offer to standing reorder.</h2>
+        <p class="t-lead process-head__lead">
+          Wholesale is a relationship, not a checkout. Here is what working with 1Sources looks like once your
+          account is open.
+        </p>
+      </div>
+      <ProcessRoute />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="why-title">
+    <div class="container">
+      <MarginSection num="04" label="Why 1Sources" sticky>
+        <h2 id="why-title" class="why-title">What buyers get from a distributor that picks up the phone.</h2>
+        <ol class="why" role="list">
+          {reasons.map((r) => (
+            <li class="why__row">
+              <h3 class="why__t">{r.title}</h3>
+              <p class="why__b">{r.body}</p>
+            </li>
+          ))}
+        </ol>
+        <p class="home-foot"><a class="tlink" href="/capabilities/">How we work <Arrow /></a></p>
+      </MarginSection>
+    </div>
+  </section>
+
+  {articles.length > 0 && (
+    <section class="section section--flush-top" aria-labelledby="insights-title">
+      <div class="container">
+        <MarginSection num="05" label="Insights">
+          <div class="home-head home-head--row">
+            <h2 id="insights-title">Notes for wholesale buyers</h2>
+            <a class="tlink" href="/insights/">All insights <Arrow /></a>
+          </div>
+          <ArticleList articles={articles} />
+        </MarginSection>
+      </div>
+    </section>
+  )}
+
+  <CTABand location="home_final" />
+</Base>
+
+<style>
+  .home-head { display: grid; gap: 16px; margin-bottom: clamp(28px, 3.5vw, 48px); }
+  .home-head--row { grid-template-columns: 1fr auto; align-items: end; }
+  .home-head h2 { max-width: 22ch; }
+  .home-foot { margin-top: 28px; }
+  .brands-note { margin-top: 20px; max-width: 60ch; }
+
+  .process-head { row-gap: 16px; margin-bottom: clamp(40px, 5vw, 72px); }
+  .process-head__label { grid-column: 1 / -1; display: flex; gap: 10px; }
+  .process-head__title { grid-column: 1 / -1; max-width: 18ch; }
+  .process-head__lead { grid-column: 1 / -1; }
+  @media (min-width: 1024px) {
+    .process-head { align-items: end; }
+    .process-head__label { grid-column: 1 / span 3; align-self: start; padding-top: 14px; }
+    .process-head__title { grid-column: 4 / span 5; grid-row: 1; }
+    .process-head__lead { grid-column: 9 / -1; grid-row: 1; }
+  }
+
+  .why-title { max-width: 20ch; margin-bottom: clamp(28px, 3.5vw, 48px); }
+  .why { border-top: var(--rule-strong); counter-reset: why; }
+  .why__row { display: grid; gap: 8px; padding: 22px 0 24px; border-bottom: var(--rule); }
+  .why__t { font-size: var(--fs-h4); }
+  .why__b { color: var(--text-secondary); max-width: 38rem; }
+  @media (min-width: 768px) {
+    .why__row { grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); column-gap: var(--gutter); }
+  }
+</style>

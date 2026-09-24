@@ -1,0 +1,242 @@
+---
+import { getCollection, getEntries, render, type CollectionEntry } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import MarginSection from '@/components/ui/MarginSection.astro';
+import FAQList from '@/components/ui/FAQList.astro';
+import BrandIndex from '@/components/ui/BrandIndex.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { site } from '@/config/site';
+import { formatDate } from '@/lib/format';
+
+export async function getStaticPaths() {
+  const categories = await getCollection('categories');
+  return categories.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: CollectionEntry<'categories'> }
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+
+const allCategories = await getCollection('categories');
+const categoryNames = Object.fromEntries(allCategories.map((c) => [c.id, c.data.title]));
+const related = await getEntries(d.related);
+const brands = await getCollection('brands', (b) => b.data.publicDisplay && b.data.categories.some((c) => c.id === entry.id));
+const linkedInsights = await getEntries(d.insights);
+const reverseInsights = await getCollection('insights', (a) => !a.data.draft && a.data.relatedCategories.some((c) => c.id === entry.id));
+const insights = [...new Map([...linkedInsights, ...reverseInsights].map((a) => [a.id, a])).values()].slice(0, 3);
+
+const path = `/categories/${entry.id}/`;
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Categories', path: '/categories/' },
+  { name: d.title, path },
+];
+const lower = d.title.toLowerCase();
+---
+<Base
+  title={d.metaTitle.replace(/\s*\|\s*1Sources$/, '')}
+  description={d.metaDescription}
+  path={path}
+  pageType="WebPage"
+  breadcrumbs={crumbs}
+  noindex={!d.confirmed}
+  viewEvent={{ name: 'category_view', params: { category: entry.id } }}
+>
+  <PageIntro crumbs={crumbs} eyebrow="Wholesale category" title={d.h1} lead={d.definition}>
+    <div class="aside-card" slot="aside">
+      <p class="eyebrow">Buying {lower}?</p>
+      <p class="aside-card__text">Approved accounts receive {lower} offers from their account contact, with case pack, condition and dating stated.</p>
+      <a class="btn btn--block" href={`/open-account/?category=${entry.id}`} data-event="open_account_click" data-event-location="category_aside" data-event-category={entry.id}>Request {d.title} pricing <Arrow /></a>
+      <p class="aside-card__alt t-small">Or call <a href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location="category_aside">{site.phone.display}</a></p>
+      {d.leadTime && <p class="aside-card__meta t-small"><strong>Typical lead time:</strong> {d.leadTime}</p>}
+    </div>
+  </PageIntro>
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <MarginSection num="01" label="Overview">
+        <div class="prose cat-prose"><Content /></div>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section section--flush-top" aria-labelledby="sub-title">
+    <div class="container">
+      <MarginSection num="02" label="In the category">
+        <h2 id="sub-title" class="cat-h2">What we supply in {lower}</h2>
+        <ul class="subs" role="list">
+          {d.subcategories.map((s) => (
+            <li class="subs__item">
+              <span class="subs__name">{s.name}</span>
+              {s.note && <span class="subs__note">{s.note}</span>}
+            </li>
+          ))}
+        </ul>
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section band--paper" aria-labelledby="consider-title">
+    <div class="container">
+      <div class="grid consider-head">
+        <p class="eyebrow consider-head__label"><span class="msec__num">03</span> Before you order</p>
+        <h2 id="consider-title" class="consider-head__title">What to know when buying {lower} wholesale</h2>
+      </div>
+      <ol class="consider" role="list">
+        {d.considerations.map((c, i) => (
+          <li class="consider__item">
+            <span class="consider__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="consider__t">{c.title}</h3>
+            <p class="consider__b">{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="buyers-title">
+    <div class="container">
+      <MarginSection num="04" label="Who we serve">
+        <div class="buyers-grid">
+          <div>
+            <h2 id="buyers-title" class="cat-h2">Who buys {lower} from us</h2>
+            <ul class="buyers" role="list">
+              {d.buyers.map((b) => <li>{b}</li>)}
+            </ul>
+          </div>
+          <div class="purchasing">
+            <h3 class="t-h4">How purchasing works</h3>
+            <ol class="purchasing__steps" role="list">
+              <li><strong>Apply for an account.</strong> Tell us your business type, channels and the {lower} lines you stock.</li>
+              <li><strong>Receive offers.</strong> Your account contact shares what’s available, with case pack, condition and dating.</li>
+              <li><strong>Place one purchase order.</strong> Combine {lower} with other categories on the same order.</li>
+              <li><strong>Receive and reorder.</strong> Orders ship to your store, warehouse or prep center; reorders get faster from there.</li>
+            </ol>
+            {site.accountTerms.minimumOrder && <p class="t-small"><strong>Minimum order:</strong> {site.accountTerms.minimumOrder}</p>}
+            <a class="tlink" href="/faq/">Account &amp; ordering FAQ <Arrow /></a>
+          </div>
+        </div>
+      </MarginSection>
+    </div>
+  </section>
+
+  {brands.length > 0 && (
+    <section class="section section--flush-top" aria-labelledby="cbrands-title">
+      <div class="container">
+        <MarginSection num="05" label="Brands">
+          <h2 id="cbrands-title" class="cat-h2">Representative {lower} brands</h2>
+          <BrandIndex brands={brands} categoryNames={categoryNames} size="md" />
+          <p class="t-small t-muted brand-note">Availability changes with each offer. Trademarks belong to their owners; a listing is not a claim of authorization. <a href="/brands/">All brands</a></p>
+        </MarginSection>
+      </div>
+    </section>
+  )}
+
+  <section class="section section--flush-top" aria-labelledby="cfaq-title">
+    <div class="container">
+      <MarginSection num={brands.length > 0 ? '06' : '05'} label="Questions">
+        <h2 id="cfaq-title" class="cat-h2">{d.title} wholesale FAQ</h2>
+        <FAQList items={d.faqs} />
+      </MarginSection>
+    </div>
+  </section>
+
+  <section class="section section--tight band--paper" aria-label="Related">
+    <div class="container grid related">
+      <nav class="related__col" aria-labelledby="rel-cats">
+        <p class="eyebrow" id="rel-cats">Related categories</p>
+        <ul role="list">
+          {related.map((r) => (
+            <li><a href={`/categories/${r.id}/`}><span>{r.data.title}</span><Arrow /></a></li>
+          ))}
+          <li><a href="/categories/"><span>All categories</span><Arrow /></a></li>
+        </ul>
+      </nav>
+      {insights.length > 0 && (
+        <nav class="related__col related__col--wide" aria-labelledby="rel-ins">
+          <p class="eyebrow" id="rel-ins">Related insights</p>
+          <ul role="list">
+            {insights.map((a) => (
+              <li><a href={`/insights/${a.id}/`}><span>{a.data.title}<small>{a.data.topic} · {formatDate(a.data.updated ?? a.data.published)}</small></span><Arrow /></a></li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  </section>
+
+  <CTABand
+    location={`category_${entry.id}`}
+    title={`Stock ${lower} from one account.`}
+    body={`Apply once and your account contact will send ${lower} offers that match what you sell — alongside every other category we carry.`}
+    primary={{ label: 'Open an Account', href: `/open-account/?category=${entry.id}`, event: 'open_account_click' }}
+  />
+</Base>
+
+<style>
+  .aside-card { display: grid; gap: 14px; padding: 24px; border: 1px solid var(--border); border-top: 2px solid var(--accent); background: var(--surface-elevated); }
+  .aside-card__text { color: var(--text-secondary); font-size: var(--fs-body-sm); }
+  .aside-card__alt { color: var(--text-muted); }
+  .aside-card__alt a { color: var(--text-primary); font-weight: 600; }
+  .aside-card__meta { border-top: var(--rule); padding-top: 12px; }
+
+  .cat-h2 { font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem); margin-bottom: 28px; max-width: 24ch; }
+  .cat-prose { font-size: var(--fs-body-lg); line-height: 1.6; }
+  .cat-prose :global(p:first-child) { color: var(--text-primary); }
+
+  .subs { display: grid; grid-template-columns: 1fr; border-top: var(--rule-strong); }
+  .subs__item { display: grid; gap: 2px; padding: 14px 16px 16px 0; border-bottom: var(--rule); }
+  .subs__name { font-weight: 600; }
+  .subs__note { font-size: var(--fs-body-sm); color: var(--text-muted); }
+  @media (min-width: 640px) {
+    .subs { grid-template-columns: 1fr 1fr; column-gap: var(--gutter); }
+  }
+
+  .consider-head { row-gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
+  .consider-head__label { grid-column: 1 / -1; display: flex; gap: 10px; }
+  .consider-head__title { grid-column: 1 / -1; max-width: 22ch; }
+  @media (min-width: 1024px) {
+    .consider-head__label { grid-column: 1 / span 3; padding-top: 12px; }
+    .consider-head__title { grid-column: 4 / -1; }
+  }
+  .consider { display: grid; gap: 0; border-top: var(--rule-strong); }
+  .consider__item { display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; row-gap: 8px; padding: 22px 0 26px; border-bottom: 1px solid var(--paper-2); border-bottom-color: #d8d3c8; }
+  .consider__num { grid-row: span 2; color: var(--accent); font-weight: 600; font-size: var(--fs-label); padding-top: 4px; }
+  .consider__t { font-size: var(--fs-h4); }
+  .consider__b { color: var(--text-secondary); max-width: 40rem; }
+  @media (min-width: 900px) {
+    .consider { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gutter) * 2); }
+    .consider__item:nth-child(odd):last-child { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .consider { margin-left: calc((100% + var(--gutter)) / 12 * 3); }
+  }
+
+  .buyers-grid { display: grid; gap: 48px; }
+  .buyers { border-top: var(--rule-strong); }
+  .buyers li { padding: 12px 0; border-bottom: var(--rule); font-weight: 500; }
+  .purchasing { display: grid; gap: 18px; align-content: start; }
+  .purchasing__steps { counter-reset: s; display: grid; gap: 14px; }
+  .purchasing__steps li { counter-increment: s; position: relative; padding-left: 28px; color: var(--text-secondary); font-size: var(--fs-body-sm); }
+  .purchasing__steps li::before { content: counter(s); position: absolute; left: 0; top: 1px; font-weight: 600; color: var(--accent); }
+  .purchasing__steps strong { color: var(--text-primary); display: block; font-size: var(--fs-body); }
+  @media (min-width: 900px) { .buyers-grid { grid-template-columns: 1fr 1fr; column-gap: calc(var(--gutter) * 2); } }
+
+  .brand-note { margin-top: 16px; }
+  .brand-note a { color: var(--text-primary); }
+
+  .related { row-gap: 40px; }
+  .related__col { grid-column: 1 / -1; }
+  .related__col .eyebrow { margin-bottom: 14px; }
+  .related__col ul { border-top: var(--rule-strong); }
+  .related__col a { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #d8d3c8; text-decoration: none; font-weight: 600; }
+  .related__col a:hover { color: var(--accent); }
+  .related__col small { display: block; font-weight: 400; color: var(--text-muted); font-size: 0.8125rem; margin-top: 2px; }
+  @media (min-width: 1024px) {
+    .related__col { grid-column: 1 / span 4; }
+    .related__col--wide { grid-column: 6 / -1; }
+  }
+</style>

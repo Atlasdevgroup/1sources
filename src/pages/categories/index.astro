@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+import { absoluteUrl } from '@/lib/seo';
+
+const categories = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Categories', path: '/categories/' }];
+const itemList = {
+  '@type': 'ItemList',
+  name: 'Wholesale categories distributed by 1Sources',
+  itemListElement: categories
+    .filter((c) => c.data.confirmed)
+    .map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.data.title, url: absoluteUrl(`/categories/${c.id}/`) })),
+};
+---
+<Base
+  title="Wholesale Categories — Health & Beauty, Household, Grocery, Toys"
+  description="The consumer-goods categories 1Sources distributes by the case to retailers and resellers: health & beauty, household, food & grocery, toys, electronics and more."
+  path="/categories/"
+  pageType="CollectionPage"
+  breadcrumbs={crumbs}
+  schema={[itemList]}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="Categories"
+    title="What 1Sources distributes"
+    lead="Name-brand consumer goods sold by the case to approved business accounts. Every category buys differently — dating in health & beauty, age grading in toys, freight weight in household — so each page covers what matters before you order."
+  />
+
+  <section class="section section--flush-top">
+    <div class="container">
+      <ol class="cindex" role="list">
+        {categories.map((c, i) => (
+          <li class="cindex__row">
+            <span class="cindex__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div class="cindex__head">
+              <h2 class="cindex__title"><a href={`/categories/${c.id}/`}>{c.data.title}</a></h2>
+              <p class="cindex__def">{c.data.definition}</p>
+            </div>
+            <ul class="cindex__subs" role="list" aria-label={`${c.data.title} subcategories`}>
+              {c.data.subcategories.slice(0, 6).map((s) => <li>{s.name}</li>)}
+            </ul>
+            <a class="cindex__go tlink" href={`/categories/${c.id}/`} aria-hidden="true" tabindex="-1">View <Arrow /></a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <CTABand
+    location="categories_index"
+    title="Buy across categories on one account."
+    body="Most accounts combine several categories on a single purchase order. Apply once, and tell us which lines you stock."
+  />
+</Base>
+
+<style>
+  .cindex { border-top: var(--rule-strong); }
+  .cindex__row {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    column-gap: 12px;
+    row-gap: 16px;
+    padding: 28px 0 32px;
+    border-bottom: var(--rule);
+  }
+  .cindex__num { color: var(--accent); font-weight: 600; font-size: var(--fs-label); padding-top: 10px; }
+  .cindex__head { display: grid; gap: 12px; }
+  .cindex__title { font-size: var(--fs-h2); }
+  .cindex__title a { text-decoration: none; }
+  .cindex__title a:hover { color: var(--accent); }
+  .cindex__def { color: var(--text-secondary); max-width: 40rem; }
+  .cindex__subs { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px 0; font-size: var(--fs-body-sm); color: var(--text-muted); }
+  .cindex__subs li:not(:last-child)::after { content: '/'; margin: 0 10px; color: var(--border); }
+  .cindex__go { grid-column: 2; justify-self: start; }
+  @media (min-width: 1024px) {
+    .cindex__row { grid-template-columns: 56px minmax(0, 6fr) minmax(0, 4fr) auto; column-gap: var(--gutter); align-items: start; padding: 36px 0 40px; }
+    .cindex__subs { grid-column: 3; display: grid; gap: 6px; padding-top: 12px; }
+    .cindex__subs li::after { display: none; }
+    .cindex__go { grid-column: 4; padding-top: 12px; }
+  }
+</style>

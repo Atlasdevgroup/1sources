@@ -1,0 +1,29 @@
+---
+interface Props {
+  name: string;
+  legend: string;
+  options: readonly (string | { value: string; label: string })[];
+  hint?: string;
+  checked?: string[];
+  requiredOne?: boolean;
+  error?: string;
+}
+const { name, legend, options, hint, checked = [], requiredOne = false, error = 'Choose at least one option.' } = Astro.props;
+const id = `g-${name}`;
+const opts = options.map((o) => (typeof o === 'string' ? { value: o, label: o } : o));
+---
+<fieldset class="cgroup" id={id} data-field data-required-one={requiredOne ? '' : undefined} aria-describedby={[hint && `${id}-hint`, `${id}-error`].filter(Boolean).join(' ')}>
+  <legend class="field__label">
+    {legend}{requiredOne ? <span class="field__req"> (choose at least one)</span> : <span class="field__opt"> (optional)</span>}
+  </legend>
+  {hint && <p class="field__hint" id={`${id}-hint`}>{hint}</p>}
+  <div class="cgroup__opts">
+    {opts.map((o, i) => (
+      <label class="cgroup__opt" for={`${id}-${i}`}>
+        <input type="checkbox" id={`${id}-${i}`} name={name} value={o.value} checked={checked.includes(o.value)} />
+        <span>{o.label}</span>
+      </label>
+    ))}
+  </div>
+  <p class="field__error" id={`${id}-error`} data-error-message={error} hidden></p>
+</fieldset>

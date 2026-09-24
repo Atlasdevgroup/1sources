@@ -1,0 +1,128 @@
+---
+import { getCollection } from 'astro:content';
+import { site, fullAddress, whatsappUrl } from '@/config/site';
+import Logo from '@/components/ui/Logo.astro';
+
+const categories = (await getCollection('categories')).sort((a, b) => a.data.order - b.data.order);
+const year = new Date().getFullYear();
+const wa = whatsappUrl();
+
+const columns = [
+  {
+    title: 'Company',
+    links: [
+      { label: 'About 1Sources', href: '/about-us/' },
+      { label: 'Capabilities', href: '/capabilities/' },
+      { label: 'Brands we carry', href: '/brands/' },
+      { label: 'Insights', href: '/insights/' },
+      { label: 'Contact', href: '/contact-us/' },
+    ],
+  },
+  {
+    title: 'Buyers',
+    links: [
+      { label: 'For retailers', href: '/retailers/' },
+      { label: 'Open an account', href: '/open-account/' },
+      { label: 'Buyer FAQ', href: '/faq/' },
+      { label: 'How resale certificates work', href: '/insights/how-resale-certificates-work/' },
+    ],
+  },
+  {
+    title: 'Brands',
+    links: [
+      { label: 'For brands & manufacturers', href: '/brand-partners/' },
+      { label: 'Discuss distribution', href: '/contact-us/?topic=brand' },
+    ],
+  },
+];
+---
+<footer class="footer band--ink" id="site-footer">
+  <div class="container">
+    <div class="grid footer__top">
+      <div class="footer__id">
+        <a href="/" class="footer__logo" aria-label={`${site.name} home`}><Logo tone="paper" /></a>
+        <p class="footer__statement">{site.description}</p>
+      </div>
+
+      <address class="footer__nap">
+        <p class="eyebrow">Contact</p>
+        <p>
+          {site.legalName && <>{site.legalName}<br /></>}
+          {site.address.street}<br />
+          {site.address.city}, {site.address.region} {site.address.postalCode}
+        </p>
+        <p>
+          <a href={`tel:${site.phone.e164}`} data-event="phone_click" data-event-location="footer">{site.phone.display}</a><br />
+          <a href={`mailto:${site.email}`} data-event="email_click" data-event-location="footer">{site.email}</a>
+          {wa && <><br /><a href={wa} rel="noopener" data-event="whatsapp_click" data-event-location="footer">WhatsApp</a></>}
+        </p>
+        {site.hours && <p class="t-small">{site.hours}</p>}
+      </address>
+    </div>
+
+    <div class="grid footer__nav">
+      <nav class="footer__col footer__col--cats" aria-labelledby="f-cats">
+        <p class="eyebrow" id="f-cats">Categories</p>
+        <ul role="list">
+          {categories.map((c) => <li><a href={`/categories/${c.id}/`}>{c.data.title}</a></li>)}
+        </ul>
+      </nav>
+      {columns.map((col) => (
+        <nav class="footer__col" aria-labelledby={`f-${col.title.toLowerCase()}`}>
+          <p class="eyebrow" id={`f-${col.title.toLowerCase()}`}>{col.title}</p>
+          <ul role="list">
+            {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </nav>
+      ))}
+    </div>
+
+    <div class="footer__base">
+      <p>© {year} {site.legalName ?? site.name}. Brand names shown on this site are trademarks of their respective owners.</p>
+      <ul role="list">
+        <li><a href="/privacy-policy/">Privacy</a></li>
+        <li><a href="/terms-conditions/">Terms</a></li>
+        <li><a href="/accessibility/">Accessibility</a></li>
+        {site.social.linkedin && <li><a href={site.social.linkedin} rel="me noopener">LinkedIn</a></li>}
+        {site.social.instagram && <li><a href={site.social.instagram} rel="me noopener">Instagram</a></li>}
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { padding-block: clamp(56px, 7vw, 96px) 28px; font-size: var(--fs-body-sm); }
+  .footer a { color: var(--paper); text-decoration: none; }
+  .footer a:hover { color: var(--accent-on-dark); text-decoration: underline; text-underline-offset: 3px; }
+  .footer .eyebrow { margin-bottom: 14px; }
+
+  .footer__top { row-gap: 36px; padding-bottom: 48px; }
+  .footer__id { grid-column: 1 / -1; }
+  .footer__logo { display: inline-block; margin-bottom: 20px; }
+  .footer__statement { font-size: var(--fs-body-lg); line-height: 1.45; color: var(--paper); max-width: 34ch; letter-spacing: -0.01em; }
+  .footer__nap { grid-column: 1 / -1; font-style: normal; color: var(--text-inverse-muted); display: grid; gap: 12px; align-content: start; }
+  .footer__nap p { line-height: 1.6; }
+
+  .footer__nav { row-gap: 36px; padding-block: 36px 48px; border-top: 1px solid var(--border-inverse); }
+  .footer__col { grid-column: span 2; }
+  .footer__col.footer__col--cats { grid-column: 1 / -1; }
+  .footer__col--cats ul { columns: 2; column-gap: var(--gutter); }
+  .footer__col li { padding-block: 5px; break-inside: avoid; }
+
+  .footer__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; padding-top: 24px; border-top: 1px solid var(--border-inverse); color: var(--text-inverse-muted); font-size: 0.8125rem; }
+  .footer__base ul { display: flex; flex-wrap: wrap; gap: 20px; }
+
+  @media (min-width: 640px) {
+    .footer__id { grid-column: 1 / span 5; }
+    .footer__nap { grid-column: 6 / -1; }
+    .footer__col { grid-column: span 2; }
+    .footer__col.footer__col--cats { grid-column: 1 / span 4; }
+  }
+  @media (min-width: 1024px) {
+    .footer__id { grid-column: 1 / span 7; }
+    .footer__nap { grid-column: 9 / -1; }
+    .footer__col.footer__col--cats { grid-column: 1 / span 5; }
+    .footer__col { grid-column: span 2; }
+    .footer__col:nth-child(2) { grid-column: 7 / span 2; }
+  }
+</style>

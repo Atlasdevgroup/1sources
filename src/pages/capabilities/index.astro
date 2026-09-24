@@ -1,0 +1,145 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageIntro from '@/components/ui/PageIntro.astro';
+import CTABand from '@/components/ui/CTABand.astro';
+import Arrow from '@/components/ui/Arrow.astro';
+
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Capabilities', path: '/capabilities/' }];
+
+/*
+ * Capabilities are written as what a buyer or brand experiences — not as
+ * productised "services". Items marked for confirmation in
+ * docs/fact-verification.md must be checked with the client before launch.
+ */
+const capabilities = [
+  {
+    id: 'product-sourcing',
+    name: 'Product sourcing',
+    lede: 'Finding name-brand inventory buyers actually want, from sources we can stand behind.',
+    body: 'We buy from brands, their distributors and legitimate inventory opportunities — current lines, packaging changes, overstock and seasonal surplus. When an account is looking for something specific, we go looking for it; when a good lot comes up, the accounts it suits hear about it first.',
+    points: ['Name-brand products in original packaging', 'Requests for specific brands and items', 'Opportunity buys offered to matching accounts'],
+  },
+  {
+    id: 'wholesale-distribution',
+    name: 'Wholesale distribution',
+    lede: 'Buying in volume and reselling by the case, so stores don’t need a vendor account for every brand.',
+    body: 'This is the core of the business. A buyer opens one account and purchases across brands and categories on a single order — the practical alternative to meeting a dozen manufacturer minimums or chasing a dozen invoices.',
+    points: ['One account across categories', 'Mixed-brand purchase orders', 'Case-pack selling to business buyers'],
+  },
+  {
+    id: 'purchasing',
+    name: 'Offers & purchasing',
+    lede: 'Quotes that carry the facts you need to say yes or no.',
+    body: 'Account holders receive offers from their account contact. Each states what matters before a purchase: case pack, condition, and dating on anything short-coded. You confirm what you want, we invoice, and the order moves.',
+    points: ['Offer lists and quotes from a named contact', 'Condition and dating stated up front', 'Clear invoices for your records'],
+  },
+  {
+    id: 'fulfillment',
+    name: 'Fulfillment & shipping',
+    lede: 'Orders picked, packed and shipped to where you receive.',
+    body: 'Orders ship to your store, warehouse, 3PL or marketplace prep center, with the paperwork your receiving team needs. Freight method depends on the order — parcel for smaller orders, palletized freight for larger ones — and your account contact confirms it on the quote.',
+    points: ['Ship to stores, warehouses or prep centers', 'Parcel or palletized freight by order size', 'Tracking or bill of lading shared on shipment'],
+  },
+  {
+    id: 'account-management',
+    name: 'Account management',
+    lede: 'A person who knows your business, not a ticket queue.',
+    body: 'Every account works with a named contact who learns what you stock, what you won’t touch, and how you like to reorder. Replenishment gets easier with each order because the next offer starts from what already sells for you.',
+    points: ['A named account contact', 'Reorder planning on core lines', 'Phone, email and messaging'],
+  },
+  {
+    id: 'brand-distribution',
+    name: 'Brand distribution',
+    lede: 'A channel to vetted professional resellers — and a home for inventory that needs to move.',
+    body: 'For brands and manufacturers, we place product with business buyers across retail and ecommerce, and we talk plainly about where it goes. We also discuss excess, discontinued and packaging-change inventory.',
+    points: ['Retail and ecommerce reseller reach', 'Respect for pricing and channel policies', 'Excess and closeout inventory conversations'],
+    link: { href: '/brand-partners/', label: 'For brands & manufacturers' },
+  },
+];
+---
+<Base
+  title="Capabilities — Sourcing, Distribution, Fulfillment & Accounts"
+  description="How 1Sources works: sourcing name-brand inventory, wholesale distribution by the case, offers and purchasing, fulfillment to your receiving location, and account management."
+  path="/capabilities/"
+  breadcrumbs={crumbs}
+>
+  <PageIntro
+    crumbs={crumbs}
+    eyebrow="Capabilities"
+    title="What a wholesale relationship with 1Sources covers"
+    lead="From finding the inventory to shipping it to your door and planning the reorder, these are the parts of the job we handle — described as they work, without the brochure language."
+  >
+    <nav class="jump" aria-label="Capabilities on this page" slot="aside">
+      <ol role="list">
+        {capabilities.map((c, i) => <li><a href={`#${c.id}`}><span class="num">{String(i + 1).padStart(2, '0')}</span>{c.name}</a></li>)}
+      </ol>
+    </nav>
+  </PageIntro>
+
+  <section class="section section--flush-top">
+    <div class="container">
+      {capabilities.map((c, i) => (
+        <article class="cap grid" id={c.id} aria-labelledby={`${c.id}-t`}>
+          <p class="cap__num num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+          <div class="cap__head">
+            <h2 class="cap__t" id={`${c.id}-t`}>{c.name}</h2>
+            <p class="cap__lede">{c.lede}</p>
+          </div>
+          <div class="cap__body">
+            <p>{c.body}</p>
+            <ul class="cap__points" role="list">
+              {c.points.map((p) => <li>{p}</li>)}
+            </ul>
+            {c.link && <a class="tlink" href={c.link.href}>{c.link.label} <Arrow /></a>}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--tight band--paper" aria-labelledby="not-title">
+    <div class="container grid notdo">
+      <h2 id="not-title" class="notdo__t">What we don’t do</h2>
+      <ul class="notdo__list" role="list">
+        <li><strong>Sell to consumers.</strong> Accounts are for businesses that resell.</li>
+        <li><strong>Dropship single units</strong> to your customers under your name.</li>
+        <li><strong>Claim authorization we don’t have.</strong> Brand relationships are described as they are.</li>
+      </ul>
+    </div>
+  </section>
+
+  <CTABand location="capabilities" />
+</Base>
+
+<style>
+  .jump ol { border-top: var(--rule-strong); }
+  .jump a { display: flex; gap: 14px; padding: 10px 0; border-bottom: var(--rule); text-decoration: none; font-weight: 500; font-size: var(--fs-body-sm); }
+  .jump a:hover { color: var(--accent); }
+  .jump .num { color: var(--accent); font-weight: 600; font-size: 0.75rem; padding-top: 2px; }
+
+  .cap { row-gap: 16px; padding-block: 36px 44px; border-top: var(--rule); scroll-margin-top: calc(var(--header-h) + 16px); }
+  .cap:first-child { border-top: var(--rule-strong); }
+  .cap__num { grid-column: 1 / -1; color: var(--accent); font-weight: 600; font-size: var(--fs-label); }
+  .cap__head { grid-column: 1 / -1; display: grid; gap: 10px; }
+  .cap__lede { font-size: var(--fs-body-lg); line-height: 1.45; color: var(--text-secondary); max-width: 30rem; }
+  .cap__body { grid-column: 1 / -1; display: grid; gap: 20px; justify-items: start; }
+  .cap__body > p { max-width: 38rem; }
+  .cap__points { width: 100%; border-top: var(--rule); }
+  .cap__points li { padding: 10px 0 10px 22px; border-bottom: var(--rule); font-size: var(--fs-body-sm); position: relative; }
+  .cap__points li::before { content: ''; position: absolute; left: 0; top: 18px; width: 10px; height: 2px; background: var(--accent); }
+  @media (min-width: 1024px) {
+    .cap__num { grid-column: 1 / span 1; padding-top: 10px; }
+    .cap__head { grid-column: 2 / span 5; }
+    .cap__body { grid-column: 8 / -1; padding-top: 6px; }
+  }
+
+  .notdo { row-gap: 20px; }
+  .notdo__t { grid-column: 1 / -1; font-size: var(--fs-h3); }
+  .notdo__list { grid-column: 1 / -1; display: grid; gap: 0; border-top: var(--rule-strong); }
+  .notdo__list li { padding: 12px 0; border-bottom: 1px solid #d8d3c8; color: var(--text-secondary); }
+  .notdo__list strong { color: var(--text-primary); }
+  @media (min-width: 1024px) {
+    .notdo__t { grid-column: 2 / span 5; }
+    .notdo__list { grid-column: 8 / -1; }
+  }
+</style>

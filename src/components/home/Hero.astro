@@ -1,0 +1,111 @@
+---
+import { site } from '@/config/site';
+import Arrow from '@/components/ui/Arrow.astro';
+
+/* Only verifiable, low-risk facts belong in this strip (docs/fact-verification.md). */
+const facts = [
+  { k: 'What we are', v: 'Wholesale distributor' },
+  { k: 'Based in', v: `${site.address.city}, ${site.address.regionName}` },
+  { k: 'Who we sell to', v: 'Retailers, ecommerce sellers and resellers' },
+  { k: 'How we sell', v: 'Name-brand goods, by the case' },
+  ...(site.yearEstablished ? [{ k: 'Established', v: String(site.yearEstablished) }] : []),
+];
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container grid hero__grid">
+    <div class="hero__copy">
+      <h1 class="t-display hero__title" id="hero-title">
+        Wholesale distribution built around relationships.
+      </h1>
+      <p class="hero__lead">
+        1Sources connects established brands and quality inventory with the retailers, ecommerce sellers and
+        professional buyers who resell them. One account, one contact and one purchase order across many brands.
+      </p>
+      <div class="btn-row hero__actions">
+        <a class="btn" href="/open-account/" data-event="open_account_click" data-event-location="hero">Open an Account <Arrow /></a>
+        <a class="btn btn--secondary" href="/categories/">Explore Categories</a>
+      </div>
+      <p class="hero__aside">
+        Brand or manufacturer? <a class="tlink" href="/brand-partners/">Talk to us about distribution</a>
+      </p>
+    </div>
+
+    <figure class="hero__media">
+      <picture>
+        <source
+          type="image/webp"
+          srcset="/assets/img/opt/racking-tall-480.webp 480w, /assets/img/opt/racking-tall-800.webp 800w, /assets/img/opt/racking-tall-1200.webp 1200w"
+          sizes="(min-width: 1024px) 42vw, 100vw"
+        />
+        <img
+          class="img-treated cut-bl"
+          src="/assets/img/opt/racking-tall-1200.jpg"
+          alt="Aisle of high-bay pallet racking stocked with cased consumer goods"
+          width="1200"
+          height="794"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+    </figure>
+  </div>
+
+  <div class="container">
+    <dl class="facts" aria-label="1Sources at a glance">
+      {facts.map((f) => (
+        <div class="facts__item">
+          <dt class="eyebrow">{f.k}</dt>
+          <dd>{f.v}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .hero { padding-top: clamp(32px, 4.5vw, 64px); }
+  .hero__grid { row-gap: 40px; align-items: end; }
+  .hero__copy { grid-column: 1 / -1; }
+  .hero__title { max-width: 15ch; }
+  .hero__lead {
+    margin-top: clamp(20px, 2.4vw, 32px);
+    font-size: var(--fs-body-lg);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-width: 36rem;
+  }
+  .hero__actions { margin-top: 32px; }
+  .hero__aside { margin-top: 28px; font-size: var(--fs-body-sm); color: var(--text-muted); }
+  .hero__aside .tlink { color: var(--text-primary); margin-left: 4px; }
+  .hero__media { grid-column: 1 / -1; margin-inline: calc(var(--page-margin) * -1); }
+  .hero__media img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+  @media (min-width: 640px) {
+    .hero__media { margin-inline: 0; }
+    .hero__media img { aspect-ratio: 16 / 10; }
+  }
+  @media (min-width: 1024px) {
+    .hero__copy { grid-column: 1 / span 7; padding-bottom: 8px; }
+    .hero__media { grid-column: 8 / -1; margin-right: calc(var(--page-margin) * -1); }
+    .hero__media img { aspect-ratio: 1 / 1.08; }
+  }
+  @media (min-width: 1360px) {
+    .hero__media { margin-right: calc((100vw - var(--width-content)) / -2); }
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: clamp(40px, 5vw, 64px);
+    border-top: var(--rule-strong);
+  }
+  .facts__item { padding: 16px 16px 18px 0; border-bottom: var(--rule); }
+  .facts__item:nth-child(odd) { padding-right: 16px; }
+  .facts dt { margin-bottom: 6px; color: var(--text-muted); }
+  .facts dd { font-weight: 600; line-height: 1.35; }
+  @media (min-width: 1024px) {
+    .facts { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
+    .facts__item { padding: 18px 24px 22px 0; border-bottom: 0; }
+    .facts__item + .facts__item { padding-left: 24px; border-left: var(--rule); }
+  }
+</style>
